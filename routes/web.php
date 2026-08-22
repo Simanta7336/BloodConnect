@@ -25,3 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/donor/profile', [DonorProfileController::class, 'edit'])->name('donor.profile.edit');
     Route::put('/donor/profile', [DonorProfileController::class, 'update'])->name('donor.profile.update');
 });
+use App\Http\Controllers\DonorSearchController;
+
+Route::get('/donors/search', [DonorSearchController::class, 'search'])
+    ->name('donors.search');
