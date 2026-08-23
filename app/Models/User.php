@@ -28,6 +28,15 @@ class User extends Authenticatable
         'location',
         'is_available',
         'last_donation_date',
+        // Recipient-specific fields (PB04)
+        'date_of_birth',
+        'gender',
+        'division',
+        'district',
+        'hospital_name',
+        'blood_units_needed',
+        'required_by_date',
+        'medical_condition',
     ];
 
     /**

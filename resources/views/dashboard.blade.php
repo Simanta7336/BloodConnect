@@ -16,17 +16,32 @@
                     <hr class="my-4">
                     
                     <div class="row g-4 mt-2">
-                        <div class="col-md-6">
-                            <div class="card h-100 border-0" style="background: linear-gradient(135deg, #fdf0f0 0%, #ffffff 100%); border-radius: 1rem;">
-                                <div class="card-body p-4 text-center">
-                                    <h5 class="fw-bold text-danger mb-3">Your Donor Profile</h5>
-                                    <p class="text-muted mb-4">Keep your availability and location updated to help us match you with urgent requests.</p>
-                                    <a href="{{ route('donor.profile.edit') }}" class="btn text-white px-4 py-2" style="background: linear-gradient(90deg, #dc3545 0%, #c82333 100%); border-radius: 50px; font-weight: 600;">
-                                        Manage Profile
-                                    </a>
+                        {{-- PB04: show the correct profile card based on the user's role --}}
+                        @if(Auth::user()->role === 'recipient')
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0" style="background: linear-gradient(135deg, #fdf0f0 0%, #ffffff 100%); border-radius: 1rem;">
+                                    <div class="card-body p-4 text-center">
+                                        <h5 class="fw-bold text-danger mb-3">Your Recipient Profile</h5>
+                                        <p class="text-muted mb-4">Keep your blood request details updated so we can match you with the right donor quickly.</p>
+                                        <a href="{{ route('recipient.profile.edit') }}" class="btn text-white px-4 py-2" style="background: linear-gradient(90deg, #dc3545 0%, #c82333 100%); border-radius: 50px; font-weight: 600;">
+                                            Manage Profile
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        @else
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0" style="background: linear-gradient(135deg, #fdf0f0 0%, #ffffff 100%); border-radius: 1rem;">
+                                    <div class="card-body p-4 text-center">
+                                        <h5 class="fw-bold text-danger mb-3">Your Donor Profile</h5>
+                                        <p class="text-muted mb-4">Keep your availability and location updated to help us match you with urgent requests.</p>
+                                        <a href="{{ route('donor.profile.edit') }}" class="btn text-white px-4 py-2" style="background: linear-gradient(90deg, #dc3545 0%, #c82333 100%); border-radius: 50px; font-weight: 600;">
+                                            Manage Profile
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                         
                         <div class="col-md-6">
                             <div class="card h-100 border-0 bg-light" style="border-radius: 1rem;">
