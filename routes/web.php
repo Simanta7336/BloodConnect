@@ -34,3 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/recipient/profile', [RecipientProfileController::class, 'update'])->name('recipient.profile.update');
 });
 
+use App\Http\Controllers\DonorSearchController;
+
+Route::get('/donors/search', [DonorSearchController::class, 'search'])
+    ->name('donors.search');

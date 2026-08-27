@@ -48,9 +48,10 @@
                                 <div class="card-body p-4 text-center">
                                     <h5 class="fw-bold text-dark mb-3">Find Blood Nearby</h5>
                                     <p class="text-muted mb-4">Looking for a donor? Search our verified network of lifesavers in your area.</p>
-                                    <button class="btn btn-outline-danger px-4 py-2" style="border-radius: 50px; font-weight: 600;" disabled>
-                                        Coming Soon
-                                    </button>
+					<a href="{{ route('donors.search') }}">
+    Search for a donor
+</a>
+                              
                                 </div>
                             </div>
                         </div>

@@ -23,7 +23,7 @@ class DonorProfileController extends Controller
             'last_donation_date' => 'nullable|date',
         ]);
 
-        $validated['is_available'] = $request->has('is_available');
+        $validated['is_available'] = $request->boolean('is_available');
 
         $request->user()->update($validated);
 
