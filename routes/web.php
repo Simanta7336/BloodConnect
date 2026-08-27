@@ -25,6 +25,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/donor/profile', [DonorProfileController::class, 'edit'])->name('donor.profile.edit');
     Route::put('/donor/profile', [DonorProfileController::class, 'update'])->name('donor.profile.update');
 });
+
+// PB04 — Recipient Profile
+use App\Http\Controllers\RecipientProfileController;
+
+Route::middleware('auth')->group(function () {
+    Route::get('/recipient/profile', [RecipientProfileController::class, 'edit'])->name('recipient.profile.edit');
+    Route::put('/recipient/profile', [RecipientProfileController::class, 'update'])->name('recipient.profile.update');
+});
+
 use App\Http\Controllers\DonorSearchController;
 
 Route::get('/donors/search', [DonorSearchController::class, 'search'])
