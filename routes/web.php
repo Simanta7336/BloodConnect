@@ -39,6 +39,14 @@ use App\Http\Controllers\DonorSearchController;
 Route::get('/donors/search', [DonorSearchController::class, 'search'])
     ->name('donors.search');
 
+// F07 — Create Blood Request (recipients only)
+use App\Http\Controllers\BloodRequestController;
+
+Route::middleware('auth')->group(function () {
+    Route::get('/blood-requests/create', [BloodRequestController::class, 'create'])->name('blood-requests.create');
+    Route::post('/blood-requests', [BloodRequestController::class, 'store'])->name('blood-requests.store');
+});
+
 use App\Http\Controllers\DonorDatabaseController;
 
 Route::middleware('auth')->group(function () {
