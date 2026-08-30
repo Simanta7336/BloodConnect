@@ -47,11 +47,24 @@
                             <div class="card h-100 border-0 bg-light" style="border-radius: 1rem;">
                                 <div class="card-body p-4 text-center">
                                     <h5 class="fw-bold text-dark mb-3">Find Blood Nearby</h5>
-                                    <p class="text-muted mb-4">Looking for a donor? Search our verified network of lifesavers in your area.</p>
-					<a href="{{ route('donors.search') }}">
-    Search for a donor
-</a>
-                              
+                                    <p class="text-muted mb-4">Search our verified network of lifesavers in your area by specific criteria.</p>
+                                    <a href="{{ route('donors.search') }}" class="btn btn-danger w-100 mb-2" style="border-radius: 50px; font-weight: 600;">
+                                        <i data-lucide="search" width="18" class="me-2"></i>Search for a Donor
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 mt-4">
+                            <div class="card border-0" style="background: linear-gradient(135deg, #fdf0f0 0%, #ffffff 100%); border-radius: 1rem; box-shadow: 0 4px 15px rgba(220, 53, 69, 0.05);">
+                                <div class="card-body p-4 text-center d-flex flex-column flex-md-row align-items-center justify-content-between">
+                                    <div class="text-start mb-3 mb-md-0">
+                                        <h5 class="fw-bold text-danger mb-1">Donor Database Overview</h5>
+                                        <p class="text-muted mb-0">Browse and filter our entire registry of registered blood donors.</p>
+                                    </div>
+                                    <a href="{{ route('donors.index') }}" class="btn btn-outline-danger px-4 py-2" style="border-radius: 50px; font-weight: 600;">
+                                        <i data-lucide="users" width="18" class="me-2"></i>View Donor Database
+                                    </a>
                                 </div>
                             </div>
                         </div>

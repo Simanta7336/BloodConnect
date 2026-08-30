@@ -38,3 +38,10 @@ use App\Http\Controllers\DonorSearchController;
 
 Route::get('/donors/search', [DonorSearchController::class, 'search'])
     ->name('donors.search');
+
+use App\Http\Controllers\DonorDatabaseController;
+
+Route::middleware('auth')->group(function () {
+    Route::get('/donors', [DonorDatabaseController::class, 'index'])->name('donors.index');
+});
+

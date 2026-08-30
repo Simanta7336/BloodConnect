@@ -25,6 +25,25 @@
             <x-input-error :messages="$errors->get('password_confirmation')" class="text-danger small mt-1" />
         </div>
 
+        <div class="mb-4">
+            <label class="form-label text-muted fw-medium small">I want to register as a:</label>
+            <div class="d-flex gap-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="role" id="role_donor" value="donor" checked>
+                    <label class="form-check-label text-dark" for="role_donor">
+                        Donor
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="role" id="role_recipient" value="recipient">
+                    <label class="form-check-label text-dark" for="role_recipient">
+                        Recipient
+                    </label>
+                </div>
+            </div>
+            <x-input-error :messages="$errors->get('role')" class="text-danger small mt-1" />
+        </div>
+
         <button type="submit" class="btn btn-primary-custom">Register</button>
         
         <div class="text-center mt-4">
