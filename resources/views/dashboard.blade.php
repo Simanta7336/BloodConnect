@@ -96,6 +96,105 @@
                                 </div>
                             </div>
                         </div>
+
+                        {{-- Blood Requests Listing with Priority Badges --}}
+                        <div class="col-md-12 mt-4">
+                            <div class="card border-0" style="border-radius: 1.5rem; box-shadow: 0 10px 30px rgba(220, 53, 69, 0.05); overflow: hidden;">
+                                <div class="card-header bg-white border-bottom p-4 d-flex align-items-center justify-content-between flex-wrap gap-2">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="bg-danger bg-opacity-10 text-danger rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+                                            <i data-lucide="activity" width="20" height="20"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="fw-bold mb-0 text-dark">
+                                                {{ Auth::user()->role === 'recipient' ? 'My Blood Requests' : 'Blood Requests' }}
+                                            </h5>
+                                            <small class="text-muted">
+                                                {{ Auth::user()->role === 'recipient' ? 'Track your submitted blood requests and priority levels' : 'Recent blood requests needing donors' }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                    @if(Auth::user()->role === 'recipient')
+                                        <a href="{{ route('blood-requests.create') }}" class="btn btn-sm btn-danger rounded-pill px-3 py-2 fw-medium shadow-sm">
+                                            <i data-lucide="plus" width="16" class="me-1"></i>New Request
+                                        </a>
+                                    @endif
+                                </div>
+
+                                <div class="card-body p-0">
+                                    @php
+                                        $displayedRequests = (Auth::user()->role === 'recipient')
+                                            ? ($bloodRequests ? $bloodRequests->where('user_id', Auth::id()) : collect())
+                                            : ($bloodRequests ?? collect());
+                                    @endphp
+
+                                    @if($displayedRequests->isEmpty())
+                                        <div class="text-center py-5">
+                                            <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px;">
+                                                <i data-lucide="inbox" class="text-muted" width="28" height="28"></i>
+                                            </div>
+                                            <h6 class="text-dark fw-bold mb-1">No Blood Requests Found</h6>
+                                            <p class="text-muted small mb-0">
+                                                {{ Auth::user()->role === 'recipient' ? 'You have not submitted any blood requests yet.' : 'No active blood requests at this time.' }}
+                                            </p>
+                                        </div>
+                                    @else
+                                        <div class="table-responsive">
+                                            <table class="table table-hover align-middle mb-0">
+                                                <thead style="background-color: #fdf0f0;">
+                                                    <tr>
+                                                        <th class="ps-4 py-3 text-dark small fw-bold">Patient Name</th>
+                                                        <th class="py-3 text-dark small fw-bold">Blood Group</th>
+                                                        <th class="py-3 text-dark small fw-bold">Units</th>
+                                                        <th class="py-3 text-dark small fw-bold">Hospital / Location</th>
+                                                        <th class="py-3 text-dark small fw-bold">Needed By</th>
+                                                        <th class="py-3 text-dark small fw-bold">Priority</th>
+                                                        <th class="pe-4 py-3 text-dark small fw-bold text-end">Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($displayedRequests as $req)
+                                                        <tr>
+                                                            <td class="ps-4 py-3 fw-medium text-dark">{{ $req->patient_name }}</td>
+                                                            <td class="py-3">
+                                                                <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-2 py-1" style="font-size: 0.85rem; border-radius: 50px;">
+                                                                    <i data-lucide="droplet" width="12" class="me-1"></i>{{ $req->blood_group }}
+                                                                </span>
+                                                            </td>
+                                                            <td class="py-3 text-muted">{{ $req->units_required }} unit{{ $req->units_required > 1 ? 's' : '' }}</td>
+                                                            <td class="py-3 text-muted">{{ $req->location }}</td>
+                                                            <td class="py-3 text-muted">
+                                                                {{ $req->needed_by_date ? \Carbon\Carbon::parse($req->needed_by_date)->format('M d, Y') : '—' }}
+                                                            </td>
+                                                            <td class="py-3">
+                                                                @if($req->priority === 'emergency')
+                                                                    <span class="badge bg-danger text-white rounded-pill px-3 py-1 fw-bold shadow-sm">
+                                                                        <i data-lucide="alert-circle" width="12" class="me-1"></i>Emergency
+                                                                    </span>
+                                                                @elseif($req->priority === 'urgent')
+                                                                    <span class="badge bg-warning text-dark rounded-pill px-3 py-1 fw-semibold">
+                                                                        <i data-lucide="alert-triangle" width="12" class="me-1"></i>Urgent
+                                                                    </span>
+                                                                @else
+                                                                    <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 px-3 py-1 rounded-pill">
+                                                                        Normal
+                                                                    </span>
+                                                                @endif
+                                                            </td>
+                                                            <td class="pe-4 py-3 text-end">
+                                                                <span class="badge bg-light text-capitalize text-dark border px-2 py-1 rounded-pill">
+                                                                    {{ $req->status }}
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

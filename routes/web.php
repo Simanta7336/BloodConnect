@@ -8,7 +8,8 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $bloodRequests = \App\Models\BloodRequest::with('user')->latest()->get();
+    return view('dashboard', compact('bloodRequests'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

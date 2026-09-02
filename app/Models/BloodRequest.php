@@ -15,6 +15,7 @@ class BloodRequest extends Model
         'units_required',
         'needed_by_date',
         'notes',
+        'priority',
         'status',
     ];
 

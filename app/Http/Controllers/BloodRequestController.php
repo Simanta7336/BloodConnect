@@ -27,6 +27,7 @@ class BloodRequestController extends Controller
             'location'       => ['required', 'string', 'max:255'],
             'units_required' => ['required', 'integer', 'min:1', 'max:20'],
             'needed_by_date' => ['required', 'date', 'after:today'],
+            'priority'       => ['required', 'string', 'in:normal,urgent,emergency'],
             'notes'          => ['nullable', 'string', 'max:1000'],
         ]);
 
@@ -37,6 +38,7 @@ class BloodRequestController extends Controller
             'location'       => $request->location,
             'units_required' => $request->units_required,
             'needed_by_date' => $request->needed_by_date,
+            'priority'       => $request->input('priority', 'normal'),
             'notes'          => $request->notes,
             'status'         => 'pending',
         ]);

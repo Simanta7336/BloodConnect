@@ -72,13 +72,29 @@
                             </div>
 
                             {{-- Needed By Date --}}
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <label for="needed_by_date" class="form-label" style="font-weight: 500; color: #555; margin-bottom: 0.5rem;">Needed By Date</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-end-0"><i data-lucide="calendar" class="text-muted" width="18"></i></span>
                                     <input type="date" class="form-control border-start-0 ps-0 @error('needed_by_date') is-invalid @enderror" id="needed_by_date" name="needed_by_date" value="{{ old('needed_by_date') }}" min="{{ date('Y-m-d', strtotime('+1 day')) }}" style="border-radius: 0 0.75rem 0.75rem 0; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; background-color: #f8fafc;">
                                 </div>
                                 @error('needed_by_date')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            {{-- Priority Level --}}
+                            <div class="col-md-6">
+                                <label for="priority" class="form-label" style="font-weight: 500; color: #555; margin-bottom: 0.5rem;">Priority Level</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0"><i data-lucide="alert-triangle" class="text-danger" width="18"></i></span>
+                                    <select class="form-select border-start-0 ps-0 @error('priority') is-invalid @enderror" id="priority" name="priority" style="border-radius: 0 0.75rem 0.75rem 0; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; background-color: #f8fafc;">
+                                        <option value="normal" {{ old('priority', 'normal') === 'normal' ? 'selected' : '' }}>Normal</option>
+                                        <option value="urgent" {{ old('priority') === 'urgent' ? 'selected' : '' }}>Urgent</option>
+                                        <option value="emergency" {{ old('priority') === 'emergency' ? 'selected' : '' }}>Emergency</option>
+                                    </select>
+                                </div>
+                                @error('priority')
                                     <div class="text-danger small mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
