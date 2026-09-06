@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\BloodRequest;
+use App\Models\User;
+use App\Notifications\BloodRequestAlertNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 
 class BloodRequestController extends Controller
 {
@@ -31,7 +34,7 @@ class BloodRequestController extends Controller
             'notes'          => ['nullable', 'string', 'max:1000'],
         ]);
 
-        BloodRequest::create([
+        $bloodRequest = BloodRequest::create([
             'user_id'        => Auth::id(),
             'patient_name'   => $request->patient_name,
             'blood_group'    => $request->blood_group,
@@ -42,6 +45,16 @@ class BloodRequestController extends Controller
             'notes'          => $request->notes,
             'status'         => 'pending',
         ]);
+
+        // F12: Find suitable donors (available donors with matching blood group)
+        $suitableDonors = User::where('role', 'donor')
+            ->where('is_available', true)
+            ->where('blood_group', $bloodRequest->blood_group)
+            ->get();
+
+        if ($suitableDonors->isNotEmpty()) {
+            Notification::send($suitableDonors, new BloodRequestAlertNotification($bloodRequest));
+        }
 
         return redirect()->route('dashboard')->with('status', 'blood-request-created');
     }

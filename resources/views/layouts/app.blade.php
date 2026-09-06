@@ -51,6 +51,16 @@
                     @else
                         <a href="{{ route('donor.profile.edit') }}" class="nav-link text-dark fw-medium me-4 {{ request()->routeIs('donor.profile.*') ? 'text-danger' : '' }}">Profile</a>
                     @endif
+
+                    {{-- F12: Notifications bell with unread badge --}}
+                    <a href="{{ route('notifications.index') }}" class="nav-link text-dark position-relative me-4 {{ request()->routeIs('notifications.*') ? 'text-danger' : '' }}" title="Notifications">
+                        <i data-lucide="bell" width="20" height="20"></i>
+                        @if(Auth::user()->unreadNotifications->count() > 0)
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem; padding: 0.25em 0.5em;">
+                                {{ Auth::user()->unreadNotifications->count() }}
+                            </span>
+                        @endif
+                    </a>
                     
                     <span class="text-muted me-3 fw-medium d-none d-sm-inline border-start ps-4">Hello, {{ Auth::user()->name }}</span>
                     <form method="POST" action="{{ route('logout') }}" class="m-0">

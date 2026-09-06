@@ -54,3 +54,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/donors', [DonorDatabaseController::class, 'index'])->name('donors.index');
 });
 
+// F12 — Donor Request Notifications
+use App\Http\Controllers\NotificationController;
+
+Route::middleware('auth')->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
+});
+

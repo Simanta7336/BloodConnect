@@ -27,6 +27,24 @@
                     
                     <hr class="my-4">
                     
+                    {{-- F12: Small notification alert indicator for donors --}}
+                    @if(Auth::user()->role === 'donor' && Auth::user()->unreadNotifications->count() > 0)
+                        <div class="alert border-0 rounded-3 shadow-sm d-flex align-items-center justify-content-between p-3 mb-4" style="background: linear-gradient(90deg, #fff5f5 0%, #ffffff 100%); border-left: 4px solid #dc3545 !important;">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-danger text-white rounded-circle p-2 d-flex align-items-center justify-content-center me-3" style="width: 38px; height: 38px;">
+                                    <i data-lucide="bell-ring" width="18" height="18"></i>
+                                </div>
+                                <div>
+                                    <strong class="text-danger">You have {{ Auth::user()->unreadNotifications->count() }} new blood donation request{{ Auth::user()->unreadNotifications->count() > 1 ? 's' : '' }}!</strong>
+                                    <p class="text-muted mb-0 small">A recipient urgently needs blood matching your donor profile.</p>
+                                </div>
+                            </div>
+                            <a href="{{ route('notifications.index') }}" class="btn btn-sm btn-danger rounded-pill px-3 py-1 fw-medium shadow-sm">
+                                View Alerts
+                            </a>
+                        </div>
+                    @endif
+
                     <div class="row g-4 mt-2">
                         {{-- PB04: show the correct profile card based on the user's role --}}
                         @if(Auth::user()->role === 'recipient')
