@@ -63,3 +63,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
 });
 
+// F13 — Accept/Reject Donation Request
+use App\Http\Controllers\DonationResponseController;
+
+Route::middleware('auth')->group(function () {
+    Route::get('/blood-requests/{id}', [DonationResponseController::class, 'show'])->name('blood-requests.show');
+    Route::post('/blood-requests/{id}/accept', [DonationResponseController::class, 'accept'])->name('blood-requests.accept');
+    Route::post('/blood-requests/{id}/reject', [DonationResponseController::class, 'reject'])->name('blood-requests.reject');
+});
+
+

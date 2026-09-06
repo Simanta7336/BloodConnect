@@ -61,4 +61,20 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Blood requests created by this user (if recipient).
+     */
+    public function bloodRequests()
+    {
+        return $this->hasMany(BloodRequest::class);
+    }
+
+    /**
+     * Donation responses submitted by this user (if donor).
+     */
+    public function donationResponses()
+    {
+        return $this->hasMany(DonationResponse::class, 'donor_id');
+    }
 }

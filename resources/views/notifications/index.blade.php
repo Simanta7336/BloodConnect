@@ -146,20 +146,28 @@
                                 </div>
 
                                 {{-- Footer Bar --}}
-                                <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 pt-2 border-top">
                                     <span class="text-muted small d-flex align-items-center gap-1">
                                         <i data-lucide="clock" width="12"></i>
                                         {{ $notification->created_at->diffForHumans() }}
                                     </span>
 
-                                    @if($isUnread)
-                                        <form method="POST" action="{{ route('notifications.mark-as-read', $notification->id) }}" class="m-0">
-                                            @csrf
-                                            <button type="submit" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1">
-                                                <i data-lucide="check" width="14" class="me-1"></i>Mark as read
-                                            </button>
-                                        </form>
-                                    @endif
+                                    <div class="d-flex align-items-center gap-2">
+                                        @if(isset($data['blood_request_id']))
+                                            <a href="{{ route('blood-requests.show', $data['blood_request_id']) }}" class="btn btn-sm btn-danger rounded-pill px-3 py-1 fw-medium shadow-sm">
+                                                <i data-lucide="heart-handshake" width="14" class="me-1"></i>View Request &amp; Respond
+                                            </a>
+                                        @endif
+
+                                        @if($isUnread)
+                                            <form method="POST" action="{{ route('notifications.mark-as-read', $notification->id) }}" class="m-0">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm btn-outline-secondary rounded-pill px-3 py-1">
+                                                    <i data-lucide="check" width="14" class="me-1"></i>Mark as read
+                                                </button>
+                                            </form>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>
