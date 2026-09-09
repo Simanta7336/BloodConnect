@@ -34,7 +34,13 @@ class DonationResponseController extends Controller
 
         $donorResponse = $bloodRequest->responseForDonor($user->id);
 
-        return view('blood_requests.show', compact('bloodRequest', 'donorResponse'));
+        // F11 — Compute matched donors only for the recipient who owns this request
+        $matchedDonors = collect();
+        if ($user->role === 'recipient' && $bloodRequest->user_id === $user->id) {
+            $matchedDonors = $bloodRequest->matchedDonors();
+        }
+
+        return view('blood_requests.show', compact('bloodRequest', 'donorResponse', 'matchedDonors'));
     }
 
     /**
@@ -137,7 +143,8 @@ class DonationResponseController extends Controller
     }
 
     /**
-     * Verify if the given donor was notified about the blood request.
+     * Verify if the given donor is authorized to view/respond to the blood request.
+     * Allowed if they received a notification OR if they are a compatible donor.
      */
     protected function isDonorAuthorized(User $donor, BloodRequest $bloodRequest): bool
     {
@@ -145,12 +152,22 @@ class DonationResponseController extends Controller
             return false;
         }
 
-        return $donor->notifications()
+        // 1. Check if they received a notification
+        $hasNotification = $donor->notifications()
             ->where(function ($q) use ($bloodRequest) {
                 $q->where('data', 'like', '%"blood_request_id":' . $bloodRequest->id . '%')
                   ->orWhere('data', 'like', '%"blood_request_id":"' . $bloodRequest->id . '"%');
             })
             ->exists();
+
+        if ($hasNotification) {
+            return true;
+        }
+
+        // 2. Allow if they are compatible based on blood group
+        $compatibleGroups = BloodRequest::COMPATIBILITY[$bloodRequest->blood_group] ?? [$bloodRequest->blood_group];
+        
+        return in_array($donor->blood_group, $compatibleGroups);
     }
 
     /**
