@@ -8,7 +8,8 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $bloodRequests = \App\Models\BloodRequest::with('user')->latest()->get();
+    return view('dashboard', compact('bloodRequests'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -52,4 +53,23 @@ use App\Http\Controllers\DonorDatabaseController;
 Route::middleware('auth')->group(function () {
     Route::get('/donors', [DonorDatabaseController::class, 'index'])->name('donors.index');
 });
+
+// F12 — Donor Request Notifications
+use App\Http\Controllers\NotificationController;
+
+Route::middleware('auth')->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
+});
+
+// F13 — Accept/Reject Donation Request
+use App\Http\Controllers\DonationResponseController;
+
+Route::middleware('auth')->group(function () {
+    Route::get('/blood-requests/{id}', [DonationResponseController::class, 'show'])->name('blood-requests.show');
+    Route::post('/blood-requests/{id}/accept', [DonationResponseController::class, 'accept'])->name('blood-requests.accept');
+    Route::post('/blood-requests/{id}/reject', [DonationResponseController::class, 'reject'])->name('blood-requests.reject');
+});
+
 
