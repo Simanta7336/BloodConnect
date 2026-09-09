@@ -141,9 +141,16 @@
 
                                 <div class="card-body p-0">
                                     @php
-                                        $displayedRequests = (Auth::user()->role === 'recipient')
-                                            ? ($bloodRequests ? $bloodRequests->where('user_id', Auth::id()) : collect())
-                                            : ($bloodRequests ?? collect());
+                                        $displayedRequests = collect();
+                                        if (Auth::user()->role === 'recipient') {
+                                            $displayedRequests = $bloodRequests ? $bloodRequests->where('user_id', Auth::id()) : collect();
+                                        } else {
+                                            // Donor: Filter requests to show only ones they are compatible with
+                                            $displayedRequests = $bloodRequests ? $bloodRequests->filter(function($req) {
+                                                $compatibleGroups = \App\Models\BloodRequest::COMPATIBILITY[$req->blood_group] ?? [$req->blood_group];
+                                                return in_array(Auth::user()->blood_group, $compatibleGroups);
+                                            }) : collect();
+                                        }
                                     @endphp
 
                                     @if($displayedRequests->isEmpty())
@@ -167,7 +174,8 @@
                                                         <th class="py-3 text-dark small fw-bold">Hospital / Location</th>
                                                         <th class="py-3 text-dark small fw-bold">Needed By</th>
                                                         <th class="py-3 text-dark small fw-bold">Priority</th>
-                                                        <th class="pe-4 py-3 text-dark small fw-bold text-end">Status</th>
+                                                        <th class="py-3 text-dark small fw-bold">Status</th>
+                                                        <th class="pe-4 py-3 text-dark small fw-bold text-end">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -199,12 +207,18 @@
                                                                     </span>
                                                                 @endif
                                                             </td>
-                                                            <td class="pe-4 py-3 text-end">
+                                                            <td class="py-3">
                                                                 <span class="badge bg-light text-capitalize text-dark border px-2 py-1 rounded-pill">
                                                                     {{ $req->status }}
                                                                 </span>
                                                             </td>
+                                                            <td class="pe-4 py-3 text-end">
+                                                                <a href="{{ route('blood-requests.show', $req->id) }}" class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-medium">
+                                                                    View
+                                                                </a>
+                                                            </td>
                                                         </tr>
+
                                                     @endforeach
                                                 </tbody>
                                             </table>

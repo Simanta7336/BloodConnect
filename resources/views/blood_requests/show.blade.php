@@ -244,7 +244,7 @@
                     @elseif(Auth::user()->role === 'recipient' && $bloodRequest->user_id === Auth::id())
                         {{-- Recipient Creator Overview --}}
                         <hr class="my-4">
-                        <div class="p-3 bg-light rounded-3">
+                        <div class="p-3 bg-light rounded-3 mb-4">
                             <h6 class="fw-bold text-dark mb-2">Donor Responses Overview</h6>
                             @if($bloodRequest->status === 'accepted' && $bloodRequest->acceptedResponse)
                                 <div class="alert alert-success border-0 rounded-3 mb-0">
@@ -260,6 +260,93 @@
                                 </div>
                             @else
                                 <p class="text-muted small mb-0">Waiting for matching donors to respond. You will be notified as soon as a donor accepts.</p>
+                            @endif
+                        </div>
+
+                        {{-- F11: Matched Donors Panel --}}
+                        <div class="mt-2">
+                            <div class="d-flex align-items-center gap-2 mb-3">
+                                <div class="bg-danger bg-opacity-10 text-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; flex-shrink: 0;">
+                                    <i data-lucide="users" width="18" height="18"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold text-dark mb-0">Matched Donors</h6>
+                                    <small class="text-muted">Available donors compatible with <strong>{{ $bloodRequest->blood_group }}</strong> blood group</small>
+                                </div>
+                                @if($matchedDonors->isNotEmpty())
+                                    <span class="badge bg-danger rounded-pill ms-auto">{{ $matchedDonors->count() }} found</span>
+                                @endif
+                            </div>
+
+                            @if($matchedDonors->isEmpty())
+                                {{-- Empty State --}}
+                                <div class="text-center py-4 border rounded-3 bg-light">
+                                    <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3 shadow-sm" style="width: 56px; height: 56px;">
+                                        <i data-lucide="user-x" class="text-muted" width="26" height="26"></i>
+                                    </div>
+                                    <h6 class="text-dark fw-bold mb-1">No Matching Donors Found</h6>
+                                    <p class="text-muted small mb-0">No available donors with a compatible blood group were found at this time.<br>Donors will be notified when they register or become available.</p>
+                                </div>
+                            @else
+                                <div class="row g-3">
+                                    @foreach($matchedDonors as $donor)
+                                        <div class="col-md-6">
+                                            <div class="card border-0 h-100 shadow-sm" style="border-radius: 1rem; border: 1.5px solid {{ $donor->is_exact_match ? '#dc354533' : '#e9ecef' }} !important; background: {{ $donor->is_exact_match ? 'linear-gradient(135deg, #fff5f5 0%, #ffffff 100%)' : '#ffffff' }};">
+                                                <div class="card-body p-3">
+                                                    <div class="d-flex align-items-start gap-3">
+                                                        {{-- Avatar / Blood Group Icon --}}
+                                                        <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 fw-bold text-white"
+                                                             style="width: 44px; height: 44px; font-size: 0.75rem; background: {{ $donor->is_exact_match ? 'linear-gradient(135deg, #dc3545, #c82333)' : 'linear-gradient(135deg, #6c757d, #495057)' }};">
+                                                            {{ $donor->blood_group }}
+                                                        </div>
+
+                                                        <div class="flex-grow-1 min-width-0">
+                                                            <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+                                                                <span class="fw-semibold text-dark" style="font-size: 0.95rem;">{{ $donor->name }}</span>
+                                                                @if($donor->is_exact_match)
+                                                                    <span class="badge bg-danger text-white rounded-pill" style="font-size: 0.7rem;">
+                                                                        <i data-lucide="zap" width="10" class="me-1"></i>Perfect Match
+                                                                    </span>
+                                                                @else
+                                                                    <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 rounded-pill" style="font-size: 0.7rem;">
+                                                                        Compatible
+                                                                    </span>
+                                                                @endif
+                                                            </div>
+
+                                                            {{-- Location --}}
+                                                            @if($donor->location)
+                                                                <div class="d-flex align-items-center gap-1 text-muted mb-2" style="font-size: 0.82rem;">
+                                                                    <i data-lucide="map-pin" width="13" height="13"></i>
+                                                                    <span>{{ $donor->location }}</span>
+                                                                </div>
+                                                            @endif
+
+                                                            {{-- Phone --}}
+                                                            @if($donor->phone)
+                                                                <a href="tel:{{ $donor->phone }}"
+                                                                   class="btn btn-sm rounded-pill px-3 py-1 fw-medium d-inline-flex align-items-center gap-1"
+                                                                   style="font-size: 0.8rem; background: {{ $donor->is_exact_match ? '#dc3545' : '#6c757d' }}; color: white; text-decoration: none;">
+                                                                    <i data-lucide="phone" width="13" height="13"></i>
+                                                                    {{ $donor->phone }}
+                                                                </a>
+                                                            @else
+                                                                <span class="text-muted" style="font-size: 0.8rem;">
+                                                                    <i data-lucide="phone-off" width="13" class="me-1"></i>No phone listed
+                                                                </span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                <p class="text-muted mt-3 mb-0" style="font-size: 0.8rem;">
+                                    <i data-lucide="info" width="13" class="me-1"></i>
+                                    Showing {{ $matchedDonors->count() }} compatible donor{{ $matchedDonors->count() > 1 ? 's' : '' }} sorted by location proximity and blood group match.
+                                </p>
                             @endif
                         </div>
                     @endif
