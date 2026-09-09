@@ -73,3 +73,11 @@ Route::middleware('auth')->group(function () {
 });
 
 
+
+// F10 — Donation History
+use App\Http\Controllers\DonationHistoryController;
+
+Route::middleware('auth')->group(function () {
+    Route::get('/donation-history', [DonationHistoryController::class, 'index'])->name('donation-history.index');
+});
+
