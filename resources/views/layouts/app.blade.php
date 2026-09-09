@@ -45,6 +45,7 @@
                 <div class="d-flex align-items-center">
                     <a href="{{ route('dashboard') }}" class="nav-link text-dark fw-medium me-4 {{ request()->routeIs('dashboard') ? 'text-danger' : '' }}">Dashboard</a>
                     <a href="{{ route('donors.index') }}" class="nav-link text-dark fw-medium me-4 {{ request()->routeIs('donors.*') ? 'text-danger' : '' }}">Donors</a>
+                    <a href="{{ route('donation-history.index') }}" class="nav-link text-dark fw-medium me-4 {{ request()->routeIs('donation-history.*') ? 'text-danger' : '' }}">History</a>
                     {{-- PB04: route to the correct profile page based on the user's role --}}
                     @if(Auth::user()->role === 'recipient')
                         <a href="{{ route('recipient.profile.edit') }}" class="nav-link text-dark fw-medium me-4 {{ request()->routeIs('recipient.profile.*') ? 'text-danger' : '' }}">Profile</a>
