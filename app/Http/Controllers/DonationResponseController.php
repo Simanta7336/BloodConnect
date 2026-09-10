@@ -68,6 +68,18 @@ class DonationResponseController extends Controller
                 ->with('error', 'You have already submitted a response to this donation request.');
         }
 
+        // F15 Eligibility check
+        if (!$user->isEligibleToDonate()) {
+            $eligibleDate = $user->nextEligibleDonationDate()->format('F j, Y');
+            // Ensure we use absolute difference or ensure it's positive. ceil helps round up days.
+            $daysLeft = ceil(now()->startOfDay()->floatDiffInDays($user->nextEligibleDonationDate()->startOfDay(), false));
+            // if negative somehow, fallback
+            if ($daysLeft < 0) { $daysLeft = 0; }
+            
+            return redirect()->route('blood-requests.show', $bloodRequest->id)
+                ->with('error', "You're not eligible to donate before {$eligibleDate}. {$daysLeft} days left until you can donate again.");
+        }
+
         // 4. Concurrency-safe atomic acceptance
         try {
             DB::transaction(function () use ($bloodRequest, $user) {
