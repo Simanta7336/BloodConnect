@@ -49,6 +49,12 @@
                     {{-- PB04: route to the correct profile page based on the user's role --}}
                     @if(Auth::user()->role === 'recipient')
                         <a href="{{ route('recipient.profile.edit') }}" class="nav-link text-dark fw-medium me-4 {{ request()->routeIs('recipient.profile.*') ? 'text-danger' : '' }}">Profile</a>
+                    @elseif(Auth::user()->role === 'hospital')
+                        <a href="{{ route('hospital.requests.index') }}" class="nav-link text-dark fw-medium me-4 {{ request()->routeIs('hospital.requests.*') ? 'text-danger' : '' }}">
+                            <i data-lucide="clipboard-list" width="16" class="me-1"></i>Requests
+                        </a>
+                    @elseif(Auth::user()->role === 'admin')
+                        <span class="nav-link text-danger fw-bold me-4">Admin</span>
                     @else
                         <a href="{{ route('donor.profile.edit') }}" class="nav-link text-dark fw-medium me-4 {{ request()->routeIs('donor.profile.*') ? 'text-danger' : '' }}">Profile</a>
                     @endif
