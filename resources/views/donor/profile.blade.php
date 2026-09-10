@@ -79,10 +79,23 @@
 
                             <div class="col-md-12">
                                 <label for="last_donation_date" class="form-label" style="font-weight: 500; color: #555; margin-bottom: 0.5rem;">Last Donation Date</label>
-                                <div class="input-group">
+                                <div class="input-group mb-2">
                                     <span class="input-group-text bg-light border-end-0"><i data-lucide="calendar" class="text-muted" width="18"></i></span>
-                                    <input type="date" class="form-control border-start-0 ps-0 @error('last_donation_date') is-invalid @enderror" id="last_donation_date" name="last_donation_date" value="{{ old('last_donation_date', $user->last_donation_date) }}" style="border-radius: 0 0.75rem 0.75rem 0; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; background-color: #f8fafc;">
+                                    <input type="date" class="form-control border-start-0 ps-0 @error('last_donation_date') is-invalid @enderror" id="last_donation_date" name="last_donation_date" value="{{ old('last_donation_date', $user->last_donation_date ? $user->last_donation_date->format('Y-m-d') : '') }}" style="border-radius: 0 0.75rem 0.75rem 0; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; background-color: #f8fafc;">
                                 </div>
+                                @if($user->last_donation_date)
+                                    <div class="d-flex align-items-center mt-2 p-2 rounded {{ $user->isEligibleToDonate() ? 'bg-success bg-opacity-10 text-success' : 'bg-warning bg-opacity-10 text-warning' }}" style="font-size: 0.9rem; border-left: 4px solid {{ $user->isEligibleToDonate() ? '#198754' : '#ffc107' }};">
+                                        <i data-lucide="{{ $user->isEligibleToDonate() ? 'check-circle' : 'clock' }}" width="18" class="me-2"></i>
+                                        <div>
+                                            <strong>Next Eligible Date:</strong> {{ $user->nextEligibleDonationDate()->format('F j, Y') }} 
+                                            @if($user->isEligibleToDonate())
+                                                (You are eligible to donate!)
+                                            @else
+                                                (You must wait 90 days between donations)
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endif
                                 @error('last_donation_date')
                                     <div class="text-danger small mt-1">{{ $message }}</div>
                                 @enderror

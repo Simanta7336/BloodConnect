@@ -26,6 +26,7 @@ class RecipientProfileController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
+            'name'               => 'required|string|max:255',
             'blood_group'        => 'nullable|string|in:A+,A-,B+,B-,AB+,AB-,O+,O-',
             'phone'              => 'nullable|string|max:20',
             'location'           => 'nullable|string|max:255',

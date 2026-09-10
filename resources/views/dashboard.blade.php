@@ -80,7 +80,19 @@
                                 <div class="card h-100 border-0" style="background: linear-gradient(135deg, #fdf0f0 0%, #ffffff 100%); border-radius: 1rem;">
                                     <div class="card-body p-4 text-center">
                                         <h5 class="fw-bold text-danger mb-3">Your Donor Profile</h5>
-                                        <p class="text-muted mb-4">Keep your availability and location updated to help us match you with urgent requests.</p>
+                                        <p class="text-muted mb-3">Keep your availability and location updated to help us match you with urgent requests.</p>
+                                        
+                                        <div class="mb-4">
+                                            @if(Auth::user()->isEligibleToDonate())
+                                                <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 border border-success border-opacity-25" style="border-radius: 50px;">
+                                                    <i data-lucide="check-circle" width="14" class="me-1"></i> Eligible to Donate
+                                                </span>
+                                            @else
+                                                <span class="badge bg-warning bg-opacity-10 text-warning px-3 py-2 border border-warning border-opacity-25" style="border-radius: 50px;">
+                                                    <i data-lucide="clock" width="14" class="me-1"></i> Eligible on {{ Auth::user()->nextEligibleDonationDate()->format('M d, Y') }}
+                                                </span>
+                                            @endif
+                                        </div>
                                         <a href="{{ route('donor.profile.edit') }}" class="btn text-white px-4 py-2" style="background: linear-gradient(90deg, #dc3545 0%, #c82333 100%); border-radius: 50px; font-weight: 600;">
                                             Manage Profile
                                         </a>

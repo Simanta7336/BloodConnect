@@ -33,14 +33,16 @@
 
                         <div class="row g-4">
 
-                            {{-- Full Name — read-only, same pattern as donor profile --}}
+                            {{-- Full Name --}}
                             <div class="col-md-12">
-                                <label class="form-label" style="font-weight: 500; color: #555; margin-bottom: 0.5rem;">Full Name</label>
+                                <label for="name" class="form-label" style="font-weight: 500; color: #555; margin-bottom: 0.5rem;">Full Name</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-end-0"><i data-lucide="user-circle" class="text-muted" width="18"></i></span>
-                                    <input type="text" class="form-control border-start-0 ps-0" value="{{ $user->name }}" disabled style="border-radius: 0 0.75rem 0.75rem 0; padding: 0.75rem 1rem; background-color: #e9ecef; border: 1px solid #e2e8f0;">
+                                    <input type="text" id="name" name="name" class="form-control border-start-0 ps-0 @error('name') is-invalid @enderror" value="{{ old('name', $user->name) }}" style="border-radius: 0 0.75rem 0.75rem 0; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; background-color: #f8fafc;">
                                 </div>
-                                <div class="form-text text-muted small"><i data-lucide="info" width="14" class="d-inline-block me-1"></i>Name cannot be changed here.</div>
+                                @error('name')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             {{-- Blood Group — select, reuses existing users.blood_group column --}}

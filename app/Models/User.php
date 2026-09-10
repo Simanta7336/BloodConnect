@@ -59,7 +59,40 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'last_donation_date' => 'date',
         ];
+    }
+
+    /**
+     * F15 — Calculate next eligible donation date.
+     * strictly based on last_donation_date + 90 days
+     */
+    public function nextEligibleDonationDate()
+    {
+        if (!$this->last_donation_date) {
+            return now()->subDay(); // Eligible immediately
+        }
+        return $this->last_donation_date->copy()->addDays(90);
+    }
+
+    /**
+     * F15 — Check if they are eligible based on time elapsed
+     */
+    public function isEligibleToDonate(): bool
+    {
+        return now()->greaterThanOrEqualTo($this->nextEligibleDonationDate());
+    }
+
+    /**
+     * Check if the donor already has an accepted/pending commitment that prevents them from taking new ones
+     */
+    public function hasActiveDonationCommitment(): bool
+    {
+        if (!method_exists($this, 'donationResponses')) return false;
+
+        return $this->donationResponses()
+            ->whereIn('status', ['accepted'])
+            ->exists();
     }
 
     /**
