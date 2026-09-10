@@ -66,13 +66,36 @@ class User extends Authenticatable
     /**
      * F15 — Calculate next eligible donation date.
      * Assuming 90 days interval for blood donation.
+     * Takes into account the profile's last_donation_date AND any accepted blood requests.
      */
     public function nextEligibleDonationDate()
     {
-        if (!$this->last_donation_date) {
-            return now(); // Eligible immediately if no past donation
+        $dates = collect();
+
+        if ($this->last_donation_date) {
+            $dates->push($this->last_donation_date);
         }
-        return $this->last_donation_date->copy()->addDays(90);
+
+        // Also check their accepted donation responses to prevent multiple bookings
+        if (method_exists($this, 'donationResponses')) {
+            $latestResponse = $this->donationResponses()
+                ->whereIn('status', ['accepted', 'completed'])
+                ->with('bloodRequest')
+                ->get()
+                ->pluck('bloodRequest.needed_by_date')
+                ->filter()
+                ->max();
+
+            if ($latestResponse) {
+                $dates->push(\Carbon\Carbon::parse($latestResponse));
+            }
+        }
+
+        if ($dates->isEmpty()) {
+            return now()->subDays(1); // Eligible immediately
+        }
+
+        return $dates->max()->copy()->addDays(90);
     }
 
     /**
@@ -80,9 +103,6 @@ class User extends Authenticatable
      */
     public function isEligibleToDonate(): bool
     {
-        if (!$this->last_donation_date) {
-            return true;
-        }
         return now()->greaterThanOrEqualTo($this->nextEligibleDonationDate());
     }
 
