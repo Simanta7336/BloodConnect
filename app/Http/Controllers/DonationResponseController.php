@@ -80,6 +80,12 @@ class DonationResponseController extends Controller
                 ->with('error', "You're not eligible to donate before {$eligibleDate}. {$daysLeft} days left until you can donate again.");
         }
 
+        // F15 Active Commitment check
+        if ($user->hasActiveDonationCommitment()) {
+            return redirect()->route('blood-requests.show', $bloodRequest->id)
+                ->with('error', "You already have an active donation commitment. You cannot accept multiple requests at the same time.");
+        }
+
         // 4. Concurrency-safe atomic acceptance
         try {
             DB::transaction(function () use ($bloodRequest, $user) {

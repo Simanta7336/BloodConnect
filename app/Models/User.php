@@ -65,45 +65,34 @@ class User extends Authenticatable
 
     /**
      * F15 — Calculate next eligible donation date.
-     * Assuming 90 days interval for blood donation.
-     * Takes into account the profile's last_donation_date AND any accepted blood requests.
+     * strictly based on last_donation_date + 90 days
      */
     public function nextEligibleDonationDate()
     {
-        $dates = collect();
-
-        if ($this->last_donation_date) {
-            $dates->push($this->last_donation_date);
+        if (!$this->last_donation_date) {
+            return now()->subDay(); // Eligible immediately
         }
-
-        // Also check their accepted donation responses to prevent multiple bookings
-        if (method_exists($this, 'donationResponses')) {
-            $latestResponse = $this->donationResponses()
-                ->whereIn('status', ['accepted', 'completed'])
-                ->with('bloodRequest')
-                ->get()
-                ->pluck('bloodRequest.needed_by_date')
-                ->filter()
-                ->max();
-
-            if ($latestResponse) {
-                $dates->push(\Carbon\Carbon::parse($latestResponse));
-            }
-        }
-
-        if ($dates->isEmpty()) {
-            return now()->subDays(1); // Eligible immediately
-        }
-
-        return $dates->max()->copy()->addDays(90);
+        return $this->last_donation_date->copy()->addDays(90);
     }
 
     /**
-     * F15 — Check if the donor is currently eligible to donate based on last donation date.
+     * F15 — Check if they are eligible based on time elapsed
      */
     public function isEligibleToDonate(): bool
     {
         return now()->greaterThanOrEqualTo($this->nextEligibleDonationDate());
+    }
+
+    /**
+     * Check if the donor already has an accepted/pending commitment that prevents them from taking new ones
+     */
+    public function hasActiveDonationCommitment(): bool
+    {
+        if (!method_exists($this, 'donationResponses')) return false;
+
+        return $this->donationResponses()
+            ->whereIn('status', ['accepted'])
+            ->exists();
     }
 
     /**
