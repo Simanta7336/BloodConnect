@@ -14,7 +14,18 @@ class DonationResponse extends Model
         'blood_request_id',
         'donor_id',
         'status',
+        // Sprint 4 (F17) — Donation confirmation fields
+        'completed_at',
+        'confirmed_by',
+        'confirmation_notes',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'completed_at' => 'datetime',
+        ];
+    }
 
     /**
      * The blood request this response belongs to.
@@ -30,5 +41,13 @@ class DonationResponse extends Model
     public function donor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'donor_id');
+    }
+
+    /**
+     * Sprint 4 (F17) — The hospital user who confirmed this donation.
+     */
+    public function confirmedByUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'confirmed_by');
     }
 }

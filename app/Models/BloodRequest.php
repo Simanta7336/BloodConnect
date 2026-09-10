@@ -11,6 +11,7 @@ class BloodRequest extends Model
 {
     protected $fillable = [
         'user_id',
+        'hospital_id',
         'patient_name',
         'blood_group',
         'location',
@@ -49,6 +50,14 @@ class BloodRequest extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Sprint 4 (F16) — The hospital managing this request.
+     */
+    public function hospital(): BelongsTo
+    {
+        return $this->belongsTo(Hospital::class);
     }
 
     /**

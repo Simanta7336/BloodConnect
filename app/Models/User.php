@@ -110,4 +110,35 @@ class User extends Authenticatable
     {
         return $this->hasMany(DonationResponse::class, 'donor_id');
     }
+
+    /**
+     * Sprint 4 — Hospital profile linked to this user (if role='hospital').
+     */
+    public function hospital()
+    {
+        return $this->hasOne(Hospital::class);
+    }
+
+    /**
+     * Sprint 4 — Role helper methods.
+     */
+    public function isDonor(): bool
+    {
+        return $this->role === 'donor';
+    }
+
+    public function isRecipient(): bool
+    {
+        return $this->role === 'recipient';
+    }
+
+    public function isHospital(): bool
+    {
+        return $this->role === 'hospital';
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
 }

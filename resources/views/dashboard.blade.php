@@ -47,7 +47,48 @@
 
                     <div class="row g-4 mt-2">
                         {{-- PB04: show the correct profile card based on the user's role --}}
-                        @if(Auth::user()->role === 'recipient')
+                        @if(Auth::user()->role === 'hospital')
+                            {{-- Sprint 4 F16: Hospital dashboard cards --}}
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0" style="background:linear-gradient(135deg,#eff6ff 0%,#ffffff 100%);border-radius:1rem;">
+                                    <div class="card-body p-4 text-center">
+                                        <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:52px;height:52px;">
+                                            <i data-lucide="clipboard-list" class="text-primary" width="28" height="28"></i>
+                                        </div>
+                                        <h5 class="fw-bold text-primary mb-3">Manage Blood Requests</h5>
+                                        <p class="text-muted mb-4">View and manage all blood donation requests. Assign your hospital and update request statuses.</p>
+                                        <a href="{{ route('hospital.requests.index') }}" class="btn text-white px-4 py-2 w-100" style="background:linear-gradient(90deg,#2563eb,#1d4ed8);border-radius:50px;font-weight:600;">
+                                            <i data-lucide="arrow-right" width="16" class="me-1"></i>View All Requests
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0" style="background:linear-gradient(135deg,#f0fdf4 0%,#ffffff 100%);border-radius:1rem;border:1.5px dashed #86efac !important;">
+                                    <div class="card-body p-4 text-center d-flex flex-column align-items-center justify-content-center">
+                                        <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mb-3" style="width:52px;height:52px;">
+                                            <i data-lucide="building-2" class="text-success" width="28" height="28"></i>
+                                        </div>
+                                        <h5 class="fw-bold text-success mb-2">{{ Auth::user()->hospital->hospital_name ?? Auth::user()->name }}</h5>
+                                        <p class="text-muted small mb-0">
+                                            @if(Auth::user()->hospital?->is_verified)
+                                                <span class="badge bg-success rounded-pill px-2 py-1"><i data-lucide="check-circle" width="12" class="me-1"></i>Verified Hospital</span>
+                                            @else
+                                                <span class="badge bg-warning text-dark rounded-pill px-2 py-1"><i data-lucide="clock" width="12" class="me-1"></i>Pending Verification</span>
+                                            @endif
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        @elseif(Auth::user()->role === 'admin')
+                            {{-- Sprint 4 F19: Admin dashboard placeholder --}}
+                            <div class="col-12">
+                                <div class="card border-0 p-4" style="background:linear-gradient(135deg,#fdf0f0,#fff);border-radius:1rem;">
+                                    <h5 class="fw-bold text-danger mb-1">Admin Dashboard</h5>
+                                    <p class="text-muted mb-0">The full admin panel will be available once F19 is implemented. You are logged in as System Admin.</p>
+                                </div>
+                            </div>
+                        @elseif(Auth::user()->role === 'recipient')
                             <div class="col-md-6">
                                 <div class="card h-100 border-0" style="background: linear-gradient(135deg, #fdf0f0 0%, #ffffff 100%); border-radius: 1rem;">
                                     <div class="card-body p-4 text-center">

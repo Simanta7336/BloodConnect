@@ -27,7 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/donor/profile', [DonorProfileController::class, 'update'])->name('donor.profile.update');
 });
 
-// PB04 — Recipient Profile
+// PB04 - Recipient Profile
 use App\Http\Controllers\RecipientProfileController;
 
 Route::middleware('auth')->group(function () {
@@ -40,7 +40,7 @@ use App\Http\Controllers\DonorSearchController;
 Route::get('/donors/search', [DonorSearchController::class, 'search'])
     ->name('donors.search');
 
-// F07 — Create Blood Request (recipients only)
+// F07 - Create Blood Request (recipients only)
 use App\Http\Controllers\BloodRequestController;
 
 Route::middleware('auth')->group(function () {
@@ -54,7 +54,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/donors', [DonorDatabaseController::class, 'index'])->name('donors.index');
 });
 
-// F12 — Donor Request Notifications
+// F12 - Donor Request Notifications
 use App\Http\Controllers\NotificationController;
 
 Route::middleware('auth')->group(function () {
@@ -63,7 +63,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
 });
 
-// F13 — Accept/Reject Donation Request
+// F13 - Accept/Reject Donation Request
 use App\Http\Controllers\DonationResponseController;
 
 Route::middleware('auth')->group(function () {
@@ -72,12 +72,42 @@ Route::middleware('auth')->group(function () {
     Route::post('/blood-requests/{id}/reject', [DonationResponseController::class, 'reject'])->name('blood-requests.reject');
 });
 
-
-
-// F10 � Donation History
+// F10 - Donation History
 use App\Http\Controllers\DonationHistoryController;
 
 Route::middleware('auth')->group(function () {
     Route::get('/donation-history', [DonationHistoryController::class, 'index'])->name('donation-history.index');
 });
 
+// ============================================================
+// Sprint 4 - Hospital Routes (F16, F17, F18)
+// Protected by 'role:hospital' middleware
+// ============================================================
+Route::middleware(['auth', 'role:hospital'])->prefix('hospital')->name('hospital.')->group(function () {
+    // F16 - Hospital Request Management
+    Route::get('/requests', [\App\Http\Controllers\Hospital\HospitalRequestController::class, 'index'])->name('requests.index');
+    Route::get('/requests/{id}', [\App\Http\Controllers\Hospital\HospitalRequestController::class, 'show'])->name('requests.show');
+    Route::post('/requests/{id}/assign', [\App\Http\Controllers\Hospital\HospitalRequestController::class, 'assign'])->name('requests.assign');
+    Route::post('/requests/{id}/unassign', [\App\Http\Controllers\Hospital\HospitalRequestController::class, 'unassign'])->name('requests.unassign');
+    Route::patch('/requests/{id}/status', [\App\Http\Controllers\Hospital\HospitalRequestController::class, 'updateStatus'])->name('requests.status');
+
+    // F17 - Confirm Completed Donation
+    // Route::post('/donations/{id}/confirm', [DonationConfirmationController::class, 'confirm'])->name('donations.confirm');
+
+    // F18 - Blood Donation Campaign Management
+    // Route::resource('campaigns', CampaignController::class);
+});
+
+// ============================================================
+// Sprint 4 - Admin Routes (F19, F20)
+// Protected by 'role:admin' middleware
+// ============================================================
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    // F19 - Admin Dashboard
+    // Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    // Route::post('/hospitals/{id}/verify', [AdminDashboardController::class, 'verifyHospital'])->name('hospitals.verify');
+
+    // F20 - Reports & Blood-Group Statistics
+    // Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    // Route::get('/statistics', [ReportController::class, 'statistics'])->name('statistics');
+});
