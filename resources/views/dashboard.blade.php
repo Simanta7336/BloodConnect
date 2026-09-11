@@ -168,6 +168,51 @@
                             </div>
                         </div>
 
+                        {{-- Upcoming Donation Appointments (Member 3) --}}
+                        @if(isset($appointments) && $appointments->isNotEmpty())
+                            <div class="col-md-12 mt-4">
+                                <div class="card border-0" style="border-radius: 1.5rem; box-shadow: 0 10px 30px rgba(40, 167, 69, 0.08); overflow: hidden; border-left: 4px solid #198754 !important;">
+                                    <div class="card-header bg-white border-bottom p-4 d-flex align-items-center justify-content-between flex-wrap gap-2">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="bg-success bg-opacity-10 text-success rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+                                                <i data-lucide="calendar-check" width="20" height="20"></i>
+                                            </div>
+                                            <div>
+                                                <h5 class="fw-bold mb-0 text-dark">Upcoming Donation Appointments</h5>
+                                                <small class="text-muted">You have {{ $appointments->count() }} active scheduled appointment{{ $appointments->count() > 1 ? 's' : '' }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body p-3">
+                                        <div class="row g-3">
+                                            @foreach($appointments as $app)
+                                                <div class="col-md-6">
+                                                    <div class="p-3 rounded-3 bg-light border d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <div class="fw-bold text-dark">
+                                                                <i data-lucide="calendar" width="16" class="text-success me-1"></i>
+                                                                {{ \Carbon\Carbon::parse($app->appointment_date)->format('M d, Y') }} at {{ date('h:i A', strtotime($app->appointment_time)) }}
+                                                            </div>
+                                                            <div class="small text-muted mt-1">
+                                                                <i data-lucide="map-pin" width="14" class="text-danger me-1"></i>{{ $app->location }}
+                                                            </div>
+                                                            <div class="small text-muted">
+                                                                {{ Auth::user()->role === 'donor' ? 'Recipient: ' . ($app->recipient->name ?? 'Recipient') : 'Donor: ' . ($app->donor->name ?? 'Donor') }}
+                                                                &bull; <span class="badge bg-danger rounded-pill">{{ $app->bloodRequest->blood_group ?? '' }}</span>
+                                                            </div>
+                                                        </div>
+                                                        <a href="{{ route('appointments.show', $app->id) }}" class="btn btn-sm btn-outline-success rounded-pill px-3">
+                                                            View
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
                         {{-- Blood Requests Listing with Priority Badges --}}
                         <div class="col-md-12 mt-4">
                             <div class="card border-0" style="border-radius: 1.5rem; box-shadow: 0 10px 30px rgba(220, 53, 69, 0.05); overflow: hidden;">

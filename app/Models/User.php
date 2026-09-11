@@ -141,4 +141,20 @@ class User extends Authenticatable
     {
         return $this->role === 'admin';
     }
+
+    /**
+     * Appointments where this user is the donor.
+     */
+    public function donorAppointments()
+    {
+        return $this->hasMany(Appointment::class, 'donor_id');
+    }
+
+    /**
+     * Appointments where this user is the recipient.
+     */
+    public function recipientAppointments()
+    {
+        return $this->hasMany(Appointment::class, 'recipient_id');
+    }
 }
