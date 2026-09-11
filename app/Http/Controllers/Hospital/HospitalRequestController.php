@@ -65,6 +65,9 @@ class HospitalRequestController extends Controller
             'hospital',
             'responses.donor',
             'acceptedResponse.donor',
+            'acceptedResponse.confirmedByUser',
+            'appointment.donor',
+            'appointment.recipient',
         ])->findOrFail($id);
 
         return view('hospital.requests.show', compact('bloodRequest', 'hospital'));

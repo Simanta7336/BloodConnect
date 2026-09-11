@@ -31,6 +31,15 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             @endif
+            @if(session('status') === 'donation-confirmed')
+                <div class="alert alert-success alert-dismissible fade show border-0 rounded-3 shadow-sm mb-4" role="alert">
+                    <div class="d-flex align-items-center gap-2">
+                        <i data-lucide="check-circle-2" class="text-success"></i>
+                        <strong>Donation Completed!</strong>&nbsp;The blood donation has been successfully confirmed as completed.
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
             @if(session('error'))
                 <div class="alert alert-danger alert-dismissible fade show border-0 rounded-3 shadow-sm mb-4" role="alert">
                     <div class="d-flex align-items-center gap-2">
@@ -171,30 +180,113 @@
                         </div>
                     </div>
 
-                    {{-- Donor Response Info --}}
+                    {{-- Donation & Donor Details --}}
                     @if($bloodRequest->acceptedResponse)
-                        <div class="p-3 rounded-3 mb-4" style="background:linear-gradient(135deg,#f0fdf4,#fff); border:1.5px solid #86efac;">
-                            <h6 class="fw-bold text-success mb-2 d-flex align-items-center gap-2">
-                                <i data-lucide="heart" width="16"></i>Accepted Donor
-                            </h6>
-                            <div class="row g-2 small">
-                                <div class="col-sm-6">
-                                    <span class="text-muted">Donor Name:</span>
-                                    <strong class="d-block text-dark">{{ $bloodRequest->acceptedResponse->donor->name }}</strong>
-                                </div>
-                                @if($bloodRequest->acceptedResponse->donor->phone)
-                                    <div class="col-sm-6">
-                                        <span class="text-muted">Phone:</span>
-                                        <a href="tel:{{ $bloodRequest->acceptedResponse->donor->phone }}" class="btn btn-sm btn-success rounded-pill px-3 py-1 mt-1">
-                                            <i data-lucide="phone" width="13" class="me-1"></i>{{ $bloodRequest->acceptedResponse->donor->phone }}
-                                        </a>
-                                    </div>
-                                @endif
-                                <div class="col-sm-6">
-                                    <span class="text-muted">Blood Group:</span>
-                                    <span class="d-block fw-bold text-danger">{{ $bloodRequest->acceptedResponse->donor->blood_group }}</span>
+                        <div class="p-4 rounded-3 mb-4" style="background:linear-gradient(135deg,#f0fdf4,#fff); border:1.5px solid #86efac;">
+                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3 pb-2 border-bottom">
+                                <h6 class="fw-bold text-success mb-0 d-flex align-items-center gap-2">
+                                    <i data-lucide="heart" width="18"></i>Donation Details
+                                </h6>
+                                <div>
+                                    @if($bloodRequest->acceptedResponse->status === 'completed')
+                                        <span class="badge bg-primary rounded-pill px-3 py-1 fw-bold">
+                                            <i data-lucide="check-check" width="12" class="me-1"></i>Completed
+                                        </span>
+                                    @else
+                                        <span class="badge bg-success rounded-pill px-3 py-1 fw-semibold">
+                                            <i data-lucide="calendar-check" width="12" class="me-1"></i>{{ $bloodRequest->appointment ? 'Scheduled' : 'Accepted' }}
+                                        </span>
+                                    @endif
                                 </div>
                             </div>
+
+                            <div class="row g-3 small">
+                                <div class="col-sm-6 col-md-4">
+                                    <span class="text-muted d-block">Donor:</span>
+                                    <strong class="d-block text-dark fs-6">{{ $bloodRequest->acceptedResponse->donor->name }}</strong>
+                                    @if($bloodRequest->acceptedResponse->donor->phone)
+                                        <a href="tel:{{ $bloodRequest->acceptedResponse->donor->phone }}" class="text-success text-decoration-none small">
+                                            <i data-lucide="phone" width="12" class="me-1"></i>{{ $bloodRequest->acceptedResponse->donor->phone }}
+                                        </a>
+                                    @endif
+                                </div>
+                                <div class="col-sm-6 col-md-4">
+                                    <span class="text-muted d-block">Recipient:</span>
+                                    <strong class="d-block text-dark fs-6">{{ $bloodRequest->user->name }}</strong>
+                                </div>
+                                <div class="col-sm-6 col-md-4">
+                                    <span class="text-muted d-block">Blood Group:</span>
+                                    <span class="fw-bold text-danger fs-6">{{ $bloodRequest->acceptedResponse->donor->blood_group }}</span>
+                                </div>
+                                @if($bloodRequest->appointment)
+                                    <div class="col-sm-6 col-md-4">
+                                        <span class="text-muted d-block">Appointment Date:</span>
+                                        <strong class="d-block text-dark">
+                                            {{ \Carbon\Carbon::parse($bloodRequest->appointment->appointment_date)->format('M d, Y') }}
+                                        </strong>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4">
+                                        <span class="text-muted d-block">Appointment Time:</span>
+                                        <strong class="d-block text-dark">
+                                            {{ \Carbon\Carbon::parse($bloodRequest->appointment->appointment_time)->format('h:i A') }}
+                                        </strong>
+                                    </div>
+                                    <div class="col-sm-6 col-md-4">
+                                        <span class="text-muted d-block">Appointment Location:</span>
+                                        <strong class="d-block text-dark">{{ $bloodRequest->appointment->location }}</strong>
+                                    </div>
+                                @endif
+                                <div class="col-sm-6 col-md-4">
+                                    <span class="text-muted d-block">Hospital:</span>
+                                    <strong class="d-block text-dark">{{ $bloodRequest->hospital->hospital_name ?? $bloodRequest->location }}</strong>
+                                </div>
+                            </div>
+
+                            @if($bloodRequest->acceptedResponse->status === 'completed')
+                                {{-- Completed Confirmation Details --}}
+                                <div class="mt-3 pt-3 border-top">
+                                    <div class="row g-2 small">
+                                        <div class="col-sm-6">
+                                            <span class="text-muted">Confirmed by:</span>
+                                            <strong class="d-block text-primary">
+                                                {{ $bloodRequest->acceptedResponse->confirmedByUser->name ?? 'Hospital / Admin' }}
+                                            </strong>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <span class="text-muted">Completed at:</span>
+                                            <span class="d-block text-dark fw-medium">
+                                                {{ $bloodRequest->acceptedResponse->completed_at ? $bloodRequest->acceptedResponse->completed_at->format('M d, Y \a\t h:i A') : '—' }}
+                                            </span>
+                                        </div>
+                                        @if($bloodRequest->acceptedResponse->confirmation_notes)
+                                            <div class="col-12 mt-2">
+                                                <span class="text-muted">Confirmation Notes:</span>
+                                                <p class="mb-0 text-dark small bg-white p-2 rounded border">{{ $bloodRequest->acceptedResponse->confirmation_notes }}</p>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            @elseif($bloodRequest->acceptedResponse->status === 'accepted' && (!$bloodRequest->hospital_id || $bloodRequest->hospital_id === $hospital->id || Auth::user()->isAdmin()))
+                                {{-- F17 — Confirm Completed Donation Form --}}
+                                <div class="mt-3 pt-3 border-top">
+                                    <h6 class="fw-bold text-dark mb-1 d-flex align-items-center gap-2">
+                                        <i data-lucide="check-circle" width="16" class="text-success"></i>Confirm Completed Donation
+                                    </h6>
+                                    <p class="text-muted small mb-3">Once the donor donates blood at the hospital, confirm the completed donation to update records, hospital logs, and donation history.</p>
+
+                                    <form method="POST" action="{{ route('hospital.donations.confirm', $bloodRequest->acceptedResponse->id) }}">
+                                        @csrf
+                                        <div class="mb-3">
+                                            <label for="confirmation_notes" class="form-label small text-muted fw-medium">Confirmation Notes (Optional)</label>
+                                            <textarea id="confirmation_notes" name="confirmation_notes" class="form-control form-control-sm rounded-3" rows="2" placeholder="e.g. 1 unit collected successfully, donor vitals stable."></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-success rounded-pill px-4 py-2 fw-semibold shadow-sm"
+                                                onclick="return confirm('Are you sure you want to confirm this donation as completed?');">
+                                            <i data-lucide="check-check" width="16" class="me-1"></i>Confirm Completed Donation
+                                        </button>
+                                    </form>
+                                </div>
+                            @endif
                         </div>
                     @endif
 

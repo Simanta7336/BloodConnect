@@ -73,7 +73,7 @@ class BloodRequest extends Model
      */
     public function acceptedResponse(): HasOne
     {
-        return $this->hasOne(DonationResponse::class)->where('status', 'accepted');
+        return $this->hasOne(DonationResponse::class)->whereIn('status', ['accepted', 'completed']);
     }
 
     /**
