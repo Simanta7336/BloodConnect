@@ -80,7 +80,7 @@
                                     </div>
                                 </div>
                             </div>
-                        @elseif(Auth::user()->role === 'admin')
+                                                @elseif(Auth::user()->role === 'admin')
                             {{-- Sprint 4 F19: Admin dashboard & F20: Reports --}}
                             <div class="col-md-6">
                                 <div class="card h-100 border-0" style="background:linear-gradient(135deg,#fdf0f0 0%,#ffffff 100%);border-radius:1rem;">
@@ -106,6 +106,34 @@
                                         <p class="text-muted mb-4">View blood-group distributions, request fulfillment analytics, and trends.</p>
                                         <a href="{{ route('admin.reports.index') }}" class="btn text-white px-4 py-2 w-100" style="background:linear-gradient(90deg,#2563eb,#1d4ed8);border-radius:50px;font-weight:600;">
                                             <i data-lucide="arrow-right" width="16" class="me-1"></i>View Analytics
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0" style="background:linear-gradient(135deg,#fdf0f0,#fff);border-radius:1rem; box-shadow: 0 4px 15px rgba(220, 53, 69, 0.05);">
+                                    <div class="card-body p-4 text-center">
+                                        <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:52px;height:52px;">
+                                            <i data-lucide="shield-check" class="text-danger" width="28" height="28"></i>
+                                        </div>
+                                        <h5 class="fw-bold text-danger mb-1">Manage Campaigns</h5>
+                                        <p class="text-muted mb-4 small">Oversee platform operations, blood drives, and community campaigns.</p>
+                                        <a href="{{ route('campaigns.index') }}" class="btn btn-danger rounded-pill px-4 py-2 fw-semibold w-100">
+                                            <i data-lucide="megaphone" width="16" class="me-1"></i>Manage Campaigns
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0" style="background:linear-gradient(135deg,#fff5f5,#fff);border-radius:1rem; border: 1.5px dashed #dc354566 !important;">
+                                    <div class="card-body p-4 text-center d-flex flex-column align-items-center justify-content-center">
+                                        <div class="bg-danger bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mb-3" style="width: 52px; height: 52px;">
+                                            <i data-lucide="plus-circle" class="text-danger" width="28" height="28"></i>
+                                        </div>
+                                        <h5 class="fw-bold text-danger mb-2">Create New Campaign</h5>
+                                        <p class="text-muted small mb-4">Schedule and publish a new community blood donation campaign or blood drive.</p>
+                                        <a href="{{ route('campaigns.create') }}" class="btn btn-danger w-100 py-2" style="border-radius: 50px; font-weight: 600;">
+                                            <i data-lucide="plus" width="16" class="me-1"></i>New Campaign
                                         </a>
                                     </div>
                                 </div>
@@ -189,6 +217,66 @@
                                 </div>
                             </div>
                         </div>
+
+                        {{-- Blood Donation Campaigns Overview (Member 3) --}}
+                        <div class="col-md-12 mt-4">
+                            <div class="card border-0" style="background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%); border-radius: 1rem; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.05); border-left: 4px solid #2563eb !important;">
+                                <div class="card-body p-4 text-center d-flex flex-column flex-md-row align-items-center justify-content-between">
+                                    <div class="text-start mb-3 mb-md-0">
+                                        <h5 class="fw-bold text-primary mb-1">Blood Donation Campaigns</h5>
+                                        <p class="text-muted mb-0">Explore upcoming community blood drives and donation campaigns organized in your area.</p>
+                                    </div>
+                                    <a href="{{ route('campaigns.index') }}" class="btn btn-outline-primary px-4 py-2" style="border-radius: 50px; font-weight: 600;">
+                                        <i data-lucide="megaphone" width="18" class="me-2"></i>View Campaigns
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Upcoming Donation Appointments (Member 3) --}}
+                        @if(isset($appointments) && $appointments->isNotEmpty())
+                            <div class="col-md-12 mt-4">
+                                <div class="card border-0" style="border-radius: 1.5rem; box-shadow: 0 10px 30px rgba(40, 167, 69, 0.08); overflow: hidden; border-left: 4px solid #198754 !important;">
+                                    <div class="card-header bg-white border-bottom p-4 d-flex align-items-center justify-content-between flex-wrap gap-2">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="bg-success bg-opacity-10 text-success rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+                                                <i data-lucide="calendar-check" width="20" height="20"></i>
+                                            </div>
+                                            <div>
+                                                <h5 class="fw-bold mb-0 text-dark">Upcoming Donation Appointments</h5>
+                                                <small class="text-muted">You have {{ $appointments->count() }} active scheduled appointment{{ $appointments->count() > 1 ? 's' : '' }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body p-3">
+                                        <div class="row g-3">
+                                            @foreach($appointments as $app)
+                                                <div class="col-md-6">
+                                                    <div class="p-3 rounded-3 bg-light border d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <div class="fw-bold text-dark">
+                                                                <i data-lucide="calendar" width="16" class="text-success me-1"></i>
+                                                                {{ \Carbon\Carbon::parse($app->appointment_date)->format('M d, Y') }} at {{ date('h:i A', strtotime($app->appointment_time)) }}
+                                                            </div>
+                                                            <div class="small text-muted mt-1">
+                                                                <i data-lucide="map-pin" width="14" class="text-danger me-1"></i>{{ $app->location }}
+                                                            </div>
+                                                            <div class="small text-muted">
+                                                                {{ Auth::user()->role === 'donor' ? 'Recipient: ' . ($app->recipient->name ?? 'Recipient') : 'Donor: ' . ($app->donor->name ?? 'Donor') }}
+                                                                &bull; <span class="badge bg-danger rounded-pill">{{ $app->bloodRequest->blood_group ?? '' }}</span>
+                                                            </div>
+                                                        </div>
+                                                        <a href="{{ route('appointments.show', $app->id) }}" class="btn btn-sm btn-outline-success rounded-pill px-3">
+                                                            View
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
 
                         {{-- Blood Requests Listing with Priority Badges --}}
                         <div class="col-md-12 mt-4">

@@ -119,4 +119,12 @@ class BloodRequest extends Model
             ->sortByDesc('match_score')
             ->values();
     }
+
+    /**
+     * Donation appointment for this blood request.
+     */
+    public function appointment(): HasOne
+    {
+        return $this->hasOne(Appointment::class, 'blood_request_id');
+    }
 }
