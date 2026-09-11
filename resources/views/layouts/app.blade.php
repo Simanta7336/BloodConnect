@@ -54,7 +54,12 @@
                             <i data-lucide="clipboard-list" width="16" class="me-1"></i>Requests
                         </a>
                     @elseif(Auth::user()->role === 'admin')
-                        <span class="nav-link text-danger fw-bold me-4">Admin</span>
+                        <a href="{{ route('admin.dashboard') }}" class="nav-link fw-medium me-2 {{ request()->routeIs('admin.dashboard') ? 'text-danger' : 'text-dark' }}">
+                            <i data-lucide="shield" width="15" class="me-1"></i>Dashboard
+                        </a>
+                        <a href="{{ route('admin.reports.index') }}" class="nav-link fw-medium me-4 {{ request()->routeIs('admin.reports.*') ? 'text-danger' : 'text-dark' }}">
+                            <i data-lucide="bar-chart-2" width="15" class="me-1"></i>Reports
+                        </a>
                     @else
                         <a href="{{ route('donor.profile.edit') }}" class="nav-link text-dark fw-medium me-4 {{ request()->routeIs('donor.profile.*') ? 'text-danger' : '' }}">Profile</a>
                     @endif

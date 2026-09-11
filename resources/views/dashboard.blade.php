@@ -80,18 +80,46 @@
                                     </div>
                                 </div>
                             </div>
-                        @elseif(Auth::user()->role === 'admin')
-                            {{-- Admin Dashboard --}}
+                                                @elseif(Auth::user()->role === 'admin')
+                            {{-- Sprint 4 F19: Admin dashboard & F20: Reports --}}
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0" style="background:linear-gradient(135deg,#fdf0f0 0%,#ffffff 100%);border-radius:1rem;">
+                                    <div class="card-body p-4 text-center">
+                                        <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:52px;height:52px;">
+                                            <i data-lucide="shield" class="text-danger" width="28" height="28"></i>
+                                        </div>
+                                        <h5 class="fw-bold text-danger mb-2">Admin Dashboard</h5>
+                                        <p class="text-muted mb-4">Manage users, approve hospital verifications, and monitor blood requests.</p>
+                                        <a href="{{ route('admin.dashboard') }}" class="btn btn-danger text-white px-4 py-2 w-100" style="border-radius:50px;font-weight:600;">
+                                            <i data-lucide="arrow-right" width="16" class="me-1"></i>Open Admin Panel
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0" style="background:linear-gradient(135deg,#eff6ff 0%,#ffffff 100%);border-radius:1rem;">
+                                    <div class="card-body p-4 text-center">
+                                        <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:52px;height:52px;">
+                                            <i data-lucide="bar-chart-2" class="text-primary" width="28" height="28"></i>
+                                        </div>
+                                        <h5 class="fw-bold text-primary mb-2">Reports &amp; Statistics</h5>
+                                        <p class="text-muted mb-4">View blood-group distributions, request fulfillment analytics, and trends.</p>
+                                        <a href="{{ route('admin.reports.index') }}" class="btn text-white px-4 py-2 w-100" style="background:linear-gradient(90deg,#2563eb,#1d4ed8);border-radius:50px;font-weight:600;">
+                                            <i data-lucide="arrow-right" width="16" class="me-1"></i>View Analytics
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-md-6">
                                 <div class="card h-100 border-0" style="background:linear-gradient(135deg,#fdf0f0,#fff);border-radius:1rem; box-shadow: 0 4px 15px rgba(220, 53, 69, 0.05);">
                                     <div class="card-body p-4 text-center">
                                         <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:52px;height:52px;">
                                             <i data-lucide="shield-check" class="text-danger" width="28" height="28"></i>
                                         </div>
-                                        <h5 class="fw-bold text-danger mb-1">Admin Dashboard</h5>
-                                        <p class="text-muted mb-4 small">Welcome, System Administrator. You have full administrative access to manage campaigns and oversee platform operations.</p>
-                                        <a href="{{ route('campaigns.index') }}" class="btn btn-danger rounded-pill px-4 py-2 fw-semibold">
-                                            <i data-lucide="megaphone" width="16" class="me-1"></i> Manage Campaigns
+                                        <h5 class="fw-bold text-danger mb-1">Manage Campaigns</h5>
+                                        <p class="text-muted mb-4 small">Oversee platform operations, blood drives, and community campaigns.</p>
+                                        <a href="{{ route('campaigns.index') }}" class="btn btn-danger rounded-pill px-4 py-2 fw-semibold w-100">
+                                            <i data-lucide="megaphone" width="16" class="me-1"></i>Manage Campaigns
                                         </a>
                                     </div>
                                 </div>
@@ -105,7 +133,7 @@
                                         <h5 class="fw-bold text-danger mb-2">Create New Campaign</h5>
                                         <p class="text-muted small mb-4">Schedule and publish a new community blood donation campaign or blood drive.</p>
                                         <a href="{{ route('campaigns.create') }}" class="btn btn-danger w-100 py-2" style="border-radius: 50px; font-weight: 600;">
-                                            <i data-lucide="plus" width="16" class="me-1"></i> New Campaign
+                                            <i data-lucide="plus" width="16" class="me-1"></i>New Campaign
                                         </a>
                                     </div>
                                 </div>
