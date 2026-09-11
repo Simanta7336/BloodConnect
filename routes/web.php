@@ -132,11 +132,18 @@ Route::middleware(['auth', 'role:hospital'])->prefix('hospital')->name('hospital
     Route::post('/requests/{id}/unassign', [\App\Http\Controllers\Hospital\HospitalRequestController::class, 'unassign'])->name('requests.unassign');
     Route::patch('/requests/{id}/status', [\App\Http\Controllers\Hospital\HospitalRequestController::class, 'updateStatus'])->name('requests.status');
 
-    // F17 - Confirm Completed Donation
-    // Route::post('/donations/{id}/confirm', [DonationConfirmationController::class, 'confirm'])->name('donations.confirm');
-
     // F18 - Blood Donation Campaign Management
     // Route::resource('campaigns', CampaignController::class);
+});
+
+// ============================================================
+// Sprint 4 - F17 Confirm Completed Donation (Hospital & Admin)
+// ============================================================
+use App\Http\Controllers\Hospital\DonationConfirmationController;
+
+Route::middleware(['auth', 'role:hospital,admin'])->group(function () {
+    Route::post('/hospital/donations/{id}/confirm', [DonationConfirmationController::class, 'confirm'])->name('hospital.donations.confirm');
+    Route::post('/admin/donations/{id}/confirm', [DonationConfirmationController::class, 'confirm'])->name('admin.donations.confirm');
 });
 
 // ============================================================

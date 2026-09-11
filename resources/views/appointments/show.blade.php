@@ -305,6 +305,15 @@
                                     </span>
                                 @endif
                             </div>
+
+                            @if($appointment->status === 'completed' && $appointment->bloodRequest && $appointment->bloodRequest->acceptedResponse && $appointment->bloodRequest->acceptedResponse->completed_at)
+                                <div class="mt-3 pt-2 border-top small text-muted">
+                                    <span>Donation confirmed completed on <strong>{{ $appointment->bloodRequest->acceptedResponse->completed_at->format('M d, Y \a\t h:i A') }}</strong></span>
+                                    @if($appointment->bloodRequest->acceptedResponse->confirmedByUser)
+                                        <span>by <strong>{{ $appointment->bloodRequest->acceptedResponse->confirmedByUser->name }}</strong></span>
+                                    @endif
+                                </div>
+                            @endif
                         </div>
 
                         {{-- Appointment Action Buttons --}}

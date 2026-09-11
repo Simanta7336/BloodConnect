@@ -126,6 +126,7 @@ class AppointmentController extends Controller
     {
         $appointment->load([
             'bloodRequest.user',
+            'bloodRequest.acceptedResponse.confirmedByUser',
             'recipient',
             'donor',
         ]);
