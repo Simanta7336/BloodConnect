@@ -16,7 +16,7 @@ class DonationResponseController extends Controller
     public function show(Request $request, $id)
     {
         $user = $request->user();
-        $bloodRequest = BloodRequest::with(['user', 'responses.donor', 'acceptedResponse.donor'])->findOrFail($id);
+        $bloodRequest = BloodRequest::with(['user', 'responses.donor', 'acceptedResponse.donor', 'appointment'])->findOrFail($id);
 
         // Security / Authorization check
         if ($user->role === 'donor') {

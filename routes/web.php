@@ -8,8 +8,27 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    $bloodRequests = \App\Models\BloodRequest::with('user')->latest()->get();
-    return view('dashboard', compact('bloodRequests'));
+    $user = auth()->user();
+    $bloodRequests = \App\Models\BloodRequest::with(['user', 'appointment'])->latest()->get();
+
+    $appointments = collect();
+    if ($user) {
+        if ($user->role === 'donor') {
+            $appointments = \App\Models\Appointment::with(['bloodRequest', 'recipient'])
+                ->where('donor_id', $user->id)
+                ->whereIn('status', ['confirmed', 'scheduled'])
+                ->orderBy('appointment_date')
+                ->get();
+        } elseif ($user->role === 'recipient') {
+            $appointments = \App\Models\Appointment::with(['bloodRequest', 'donor'])
+                ->where('recipient_id', $user->id)
+                ->whereIn('status', ['confirmed', 'scheduled'])
+                ->orderBy('appointment_date')
+                ->get();
+        }
+    }
+
+    return view('dashboard', compact('bloodRequests', 'appointments'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -77,6 +96,19 @@ use App\Http\Controllers\DonationHistoryController;
 
 Route::middleware('auth')->group(function () {
     Route::get('/donation-history', [DonationHistoryController::class, 'index'])->name('donation-history.index');
+});
+
+// ============================================================
+// Member 3 - Schedule Donation Appointments
+// ============================================================
+use App\Http\Controllers\AppointmentController;
+
+Route::middleware('auth')->group(function () {
+    Route::get('/appointments/create/{bloodRequestId}', [AppointmentController::class, 'create'])->name('appointments.create');
+    Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
+    Route::get('/appointments/{appointment}', [AppointmentController::class, 'show'])->name('appointments.show');
+    Route::post('/appointments/{appointment}/complete', [AppointmentController::class, 'complete'])->name('appointments.complete');
+    Route::post('/appointments/{appointment}/cancel', [AppointmentController::class, 'cancel'])->name('appointments.cancel');
 });
 
 // ============================================================

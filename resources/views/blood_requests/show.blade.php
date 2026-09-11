@@ -185,6 +185,32 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                        {{-- Appointment Status for Donor --}}
+                                        @if($bloodRequest->appointment)
+                                            <div class="mt-3 p-3 rounded-3 bg-white border border-success">
+                                                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                                                    <div>
+                                                        <span class="badge bg-success mb-1">Appointment Scheduled</span>
+                                                        <div class="small text-dark">
+                                                            <strong>Date:</strong> {{ \Carbon\Carbon::parse($bloodRequest->appointment->appointment_date)->format('M d, Y') }} &nbsp;|&nbsp;
+                                                            <strong>Time:</strong> {{ date('h:i A', strtotime($bloodRequest->appointment->appointment_time)) }}
+                                                        </div>
+                                                        <div class="small text-muted">
+                                                            <strong>Location:</strong> {{ $bloodRequest->appointment->location }}
+                                                        </div>
+                                                    </div>
+                                                    <a href="{{ route('appointments.show', $bloodRequest->appointment->id) }}" class="btn btn-sm btn-success rounded-pill px-3">
+                                                        <i data-lucide="calendar-check" width="14" class="me-1"></i> View Details
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        @else
+                                            <div class="mt-3 p-2 rounded-3 bg-white border text-muted small d-flex align-items-center gap-2">
+                                                <i data-lucide="clock" width="16" class="text-warning"></i>
+                                                <span>The recipient will schedule the donation appointment date, time, and location with you shortly.</span>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -247,7 +273,7 @@
                         <div class="p-3 bg-light rounded-3 mb-4">
                             <h6 class="fw-bold text-dark mb-2">Donor Responses Overview</h6>
                             @if($bloodRequest->status === 'accepted' && $bloodRequest->acceptedResponse)
-                                <div class="alert alert-success border-0 rounded-3 mb-0">
+                                <div class="alert alert-success border-0 rounded-3 mb-3">
                                     <div class="d-flex align-items-center gap-2">
                                         <i data-lucide="check-circle" class="text-success"></i>
                                         <div>
@@ -258,6 +284,43 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                {{-- Appointment Section for Recipient --}}
+                                @if($bloodRequest->appointment)
+                                    <div class="card border-0 rounded-3 p-3 mb-0" style="background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%); border: 1.5px solid #86efac !important;">
+                                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                            <div>
+                                                <div class="d-flex align-items-center gap-2 mb-1">
+                                                    <i data-lucide="calendar-check" class="text-success" width="18"></i>
+                                                    <strong class="text-success">Donation Appointment Scheduled</strong>
+                                                    <span class="badge bg-success rounded-pill">{{ ucfirst($bloodRequest->appointment->status) }}</span>
+                                                </div>
+                                                <div class="small text-dark">
+                                                    <span><strong>Date:</strong> {{ \Carbon\Carbon::parse($bloodRequest->appointment->appointment_date)->format('M d, Y') }}</span>
+                                                    <span class="ms-3"><strong>Time:</strong> {{ date('h:i A', strtotime($bloodRequest->appointment->appointment_time)) }}</span>
+                                                </div>
+                                                <div class="small text-muted mt-1">
+                                                    <i data-lucide="map-pin" width="14" class="text-danger me-1"></i>{{ $bloodRequest->appointment->location }}
+                                                </div>
+                                            </div>
+                                            <a href="{{ route('appointments.show', $bloodRequest->appointment->id) }}" class="btn btn-success rounded-pill px-3 py-1 fw-semibold shadow-sm">
+                                                <i data-lucide="eye" width="14" class="me-1"></i> View Appointment
+                                            </a>
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="card border-0 rounded-3 p-3 mb-0" style="background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%); border: 1.5px dashed #dc354588 !important;">
+                                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                            <div>
+                                                <h6 class="fw-bold text-danger mb-1"><i data-lucide="calendar-plus" class="me-1"></i> Schedule Donation Appointment</h6>
+                                                <p class="text-muted small mb-0">A donor has accepted your request. Please schedule the donation date, time, and location.</p>
+                                            </div>
+                                            <a href="{{ route('appointments.create', $bloodRequest->id) }}" class="btn btn-danger rounded-pill px-4 py-2 fw-semibold shadow-sm">
+                                                <i data-lucide="calendar-plus" width="16" class="me-1"></i> Schedule Appointment
+                                            </a>
+                                        </div>
+                                    </div>
+                                @endif
                             @else
                                 <p class="text-muted small mb-0">Waiting for matching donors to respond. You will be notified as soon as a donor accepts.</p>
                             @endif
