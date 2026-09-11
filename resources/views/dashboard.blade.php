@@ -81,11 +81,33 @@
                                 </div>
                             </div>
                         @elseif(Auth::user()->role === 'admin')
-                            {{-- Sprint 4 F19: Admin dashboard placeholder --}}
-                            <div class="col-12">
-                                <div class="card border-0 p-4" style="background:linear-gradient(135deg,#fdf0f0,#fff);border-radius:1rem;">
-                                    <h5 class="fw-bold text-danger mb-1">Admin Dashboard</h5>
-                                    <p class="text-muted mb-0">The full admin panel will be available once F19 is implemented. You are logged in as System Admin.</p>
+                            {{-- Sprint 4 F19: Admin dashboard & F20: Reports --}}
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0" style="background:linear-gradient(135deg,#fdf0f0 0%,#ffffff 100%);border-radius:1rem;">
+                                    <div class="card-body p-4 text-center">
+                                        <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:52px;height:52px;">
+                                            <i data-lucide="shield" class="text-danger" width="28" height="28"></i>
+                                        </div>
+                                        <h5 class="fw-bold text-danger mb-2">Admin Dashboard</h5>
+                                        <p class="text-muted mb-4">Manage users, approve hospital verifications, and monitor blood requests.</p>
+                                        <a href="{{ route('admin.dashboard') }}" class="btn btn-danger text-white px-4 py-2 w-100" style="border-radius:50px;font-weight:600;">
+                                            <i data-lucide="arrow-right" width="16" class="me-1"></i>Open Admin Panel
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0" style="background:linear-gradient(135deg,#eff6ff 0%,#ffffff 100%);border-radius:1rem;">
+                                    <div class="card-body p-4 text-center">
+                                        <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:52px;height:52px;">
+                                            <i data-lucide="bar-chart-2" class="text-primary" width="28" height="28"></i>
+                                        </div>
+                                        <h5 class="fw-bold text-primary mb-2">Reports &amp; Statistics</h5>
+                                        <p class="text-muted mb-4">View blood-group distributions, request fulfillment analytics, and trends.</p>
+                                        <a href="{{ route('admin.reports.index') }}" class="btn text-white px-4 py-2 w-100" style="background:linear-gradient(90deg,#2563eb,#1d4ed8);border-radius:50px;font-weight:600;">
+                                            <i data-lucide="arrow-right" width="16" class="me-1"></i>View Analytics
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         @elseif(Auth::user()->role === 'recipient')

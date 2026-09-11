@@ -102,12 +102,15 @@ Route::middleware(['auth', 'role:hospital'])->prefix('hospital')->name('hospital
 // Sprint 4 - Admin Routes (F19, F20)
 // Protected by 'role:admin' middleware
 // ============================================================
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\ReportController;
+
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     // F19 - Admin Dashboard
-    // Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-    // Route::post('/hospitals/{id}/verify', [AdminDashboardController::class, 'verifyHospital'])->name('hospitals.verify');
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::post('/hospitals/{id}/verify', [AdminDashboardController::class, 'verifyHospital'])->name('hospitals.verify');
+    Route::post('/hospitals/{id}/reject', [AdminDashboardController::class, 'rejectHospital'])->name('hospitals.reject');
 
     // F20 - Reports & Blood-Group Statistics
-    // Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
-    // Route::get('/statistics', [ReportController::class, 'statistics'])->name('statistics');
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
 });
