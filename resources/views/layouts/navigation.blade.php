@@ -18,6 +18,10 @@
                     <x-nav-link :href="route('donation-history.index')" :active="request()->routeIs('donation-history.index')">
                         {{ __('Donation History') }}
                     </x-nav-link>
+
+                    <x-nav-link :href="route('campaigns.index')" :active="request()->routeIs('campaigns.*')">
+                        {{ __('Campaigns') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -76,6 +80,10 @@
             
             <x-responsive-nav-link :href="route('donation-history.index')" :active="request()->routeIs('donation-history.index')">
                 {{ __('Donation History') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('campaigns.index')" :active="request()->routeIs('campaigns.*')">
+                {{ __('Campaigns') }}
             </x-responsive-nav-link>
         </div>
 

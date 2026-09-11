@@ -81,11 +81,33 @@
                                 </div>
                             </div>
                         @elseif(Auth::user()->role === 'admin')
-                            {{-- Sprint 4 F19: Admin dashboard placeholder --}}
-                            <div class="col-12">
-                                <div class="card border-0 p-4" style="background:linear-gradient(135deg,#fdf0f0,#fff);border-radius:1rem;">
-                                    <h5 class="fw-bold text-danger mb-1">Admin Dashboard</h5>
-                                    <p class="text-muted mb-0">The full admin panel will be available once F19 is implemented. You are logged in as System Admin.</p>
+                            {{-- Admin Dashboard --}}
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0" style="background:linear-gradient(135deg,#fdf0f0,#fff);border-radius:1rem; box-shadow: 0 4px 15px rgba(220, 53, 69, 0.05);">
+                                    <div class="card-body p-4 text-center">
+                                        <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:52px;height:52px;">
+                                            <i data-lucide="shield-check" class="text-danger" width="28" height="28"></i>
+                                        </div>
+                                        <h5 class="fw-bold text-danger mb-1">Admin Dashboard</h5>
+                                        <p class="text-muted mb-4 small">Welcome, System Administrator. You have full administrative access to manage campaigns and oversee platform operations.</p>
+                                        <a href="{{ route('campaigns.index') }}" class="btn btn-danger rounded-pill px-4 py-2 fw-semibold">
+                                            <i data-lucide="megaphone" width="16" class="me-1"></i> Manage Campaigns
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0" style="background:linear-gradient(135deg,#fff5f5,#fff);border-radius:1rem; border: 1.5px dashed #dc354566 !important;">
+                                    <div class="card-body p-4 text-center d-flex flex-column align-items-center justify-content-center">
+                                        <div class="bg-danger bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mb-3" style="width: 52px; height: 52px;">
+                                            <i data-lucide="plus-circle" class="text-danger" width="28" height="28"></i>
+                                        </div>
+                                        <h5 class="fw-bold text-danger mb-2">Create New Campaign</h5>
+                                        <p class="text-muted small mb-4">Schedule and publish a new community blood donation campaign or blood drive.</p>
+                                        <a href="{{ route('campaigns.create') }}" class="btn btn-danger w-100 py-2" style="border-radius: 50px; font-weight: 600;">
+                                            <i data-lucide="plus" width="16" class="me-1"></i> New Campaign
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         @elseif(Auth::user()->role === 'recipient')
@@ -163,6 +185,21 @@
                                     </div>
                                     <a href="{{ route('donors.index') }}" class="btn btn-outline-danger px-4 py-2" style="border-radius: 50px; font-weight: 600;">
                                         <i data-lucide="users" width="18" class="me-2"></i>View Donor Database
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Blood Donation Campaigns Overview (Member 3) --}}
+                        <div class="col-md-12 mt-4">
+                            <div class="card border-0" style="background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%); border-radius: 1rem; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.05); border-left: 4px solid #2563eb !important;">
+                                <div class="card-body p-4 text-center d-flex flex-column flex-md-row align-items-center justify-content-between">
+                                    <div class="text-start mb-3 mb-md-0">
+                                        <h5 class="fw-bold text-primary mb-1">Blood Donation Campaigns</h5>
+                                        <p class="text-muted mb-0">Explore upcoming community blood drives and donation campaigns organized in your area.</p>
+                                    </div>
+                                    <a href="{{ route('campaigns.index') }}" class="btn btn-outline-primary px-4 py-2" style="border-radius: 50px; font-weight: 600;">
+                                        <i data-lucide="megaphone" width="18" class="me-2"></i>View Campaigns
                                     </a>
                                 </div>
                             </div>

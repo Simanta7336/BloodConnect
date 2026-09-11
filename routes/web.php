@@ -112,6 +112,15 @@ Route::middleware('auth')->group(function () {
 });
 
 // ============================================================
+// Member 3 - Blood Donation Campaign Management (Admin Controlled)
+// ============================================================
+use App\Http\Controllers\CampaignController;
+
+Route::middleware('auth')->group(function () {
+    Route::resource('campaigns', CampaignController::class);
+});
+
+// ============================================================
 // Sprint 4 - Hospital Routes (F16, F17, F18)
 // Protected by 'role:hospital' middleware
 // ============================================================
