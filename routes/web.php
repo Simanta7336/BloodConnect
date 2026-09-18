@@ -151,6 +151,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::post('/hospitals/{id}/verify', [AdminDashboardController::class, 'verifyHospital'])->name('hospitals.verify');
     Route::post('/hospitals/{id}/reject', [AdminDashboardController::class, 'rejectHospital'])->name('hospitals.reject');
+    Route::post('/hospitals/{id}/revoke', [AdminDashboardController::class, 'revokeHospital'])->name('hospitals.revoke');
 
     // F20 - Reports & Blood-Group Statistics
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');

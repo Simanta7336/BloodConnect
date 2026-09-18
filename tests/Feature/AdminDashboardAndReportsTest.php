@@ -67,10 +67,15 @@ class AdminDashboardAndReportsTest extends TestCase
         $response->assertSessionHas('status', 'hospital-verified');
         $this->assertTrue($hospital->fresh()->is_verified);
 
-        // Reject / revoke hospital verification
+        // Revoke hospital verification
+        $response = $this->actingAs($admin)->post(route('admin.hospitals.revoke', $hospital->id));
+        $response->assertSessionHas('status', 'hospital-revoked');
+        $this->assertFalse($hospital->fresh()->is_verified);
+
+        // Reject and delete hospital
         $response = $this->actingAs($admin)->post(route('admin.hospitals.reject', $hospital->id));
         $response->assertSessionHas('status', 'hospital-rejected');
-        $this->assertFalse($hospital->fresh()->is_verified);
+        $this->assertDatabaseMissing('hospitals', ['id' => $hospital->id]);
     }
 
     public function test_admin_can_access_reports_and_see_blood_group_statistics(): void

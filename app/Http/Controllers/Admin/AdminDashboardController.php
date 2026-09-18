@@ -73,14 +73,30 @@ class AdminDashboardController extends Controller
     }
 
     /**
-     * F19 - Reject/unverify a hospital account.
+     * F19 - Reject / Remove a hospital account.
      */
     public function rejectHospital(Request $request, $id)
+    {
+        $hospital = Hospital::findOrFail($id);
+        $user = $hospital->user;
+
+        $hospital->delete();
+        if ($user) {
+            $user->delete();
+        }
+
+        return back()->with('status', 'hospital-rejected');
+    }
+
+    /**
+     * F19 - Revoke verification for an approved hospital.
+     */
+    public function revokeHospital(Request $request, $id)
     {
         $hospital = Hospital::findOrFail($id);
         $hospital->is_verified = false;
         $hospital->save();
 
-        return back()->with('status', 'hospital-rejected');
+        return back()->with('status', 'hospital-revoked');
     }
 }

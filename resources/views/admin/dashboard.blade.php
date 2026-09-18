@@ -1,4 +1,4 @@
-﻿<x-app-layout>
+<x-app-layout>
 <div class="container py-5">
 
     {{-- Page Header --}}
@@ -22,15 +22,24 @@
         <div class="alert alert-success alert-dismissible fade show border-0 rounded-3 shadow-sm mb-4" role="alert">
             <div class="d-flex align-items-center gap-2">
                 <i data-lucide="check-circle-2" class="text-success"></i>
-                <strong>Verified!</strong>&nbsp;The hospital has been approved and can now log in.
+                <strong>Verified!</strong>&nbsp;The hospital has been approved.
             </div>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif
     @if(session('status') === 'hospital-rejected')
+        <div class="alert alert-danger alert-dismissible fade show border-0 rounded-3 shadow-sm mb-4" role="alert">
+            <div class="d-flex align-items-center gap-2">
+                <i data-lucide="x-circle" class="text-danger"></i>
+                The hospital application has been rejected and removed from the system.
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+    @if(session('status') === 'hospital-revoked')
         <div class="alert alert-warning alert-dismissible fade show border-0 rounded-3 shadow-sm mb-4" role="alert">
             <div class="d-flex align-items-center gap-2">
-                <i data-lucide="x-circle" class="text-warning"></i>
+                <i data-lucide="alert-triangle" class="text-warning"></i>
                 The hospital verification has been revoked.
             </div>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -218,23 +227,32 @@
                                     @endif
                                 </td>
                                 <td class="text-end">
-                                    @if($hospital->is_verified)
+                                    <div class="d-flex gap-2 justify-content-end">
+                                        @if($hospital->is_verified)
+                                            <form method="POST" action="{{ route('admin.hospitals.revoke', $hospital->id) }}">
+                                                @csrf
+                                                <button type="submit" class="btn btn-outline-warning btn-sm rounded-pill px-3 fw-medium"
+                                                    onclick="return confirm('Revoke verification for {{ addslashes($hospital->hospital_name) }}?')">
+                                                    <i data-lucide="x" width="14" class="me-1"></i>Revoke
+                                                </button>
+                                            </form>
+                                        @else
+                                            <form method="POST" action="{{ route('admin.hospitals.verify', $hospital->id) }}">
+                                                @csrf
+                                                <button type="submit" class="btn btn-success btn-sm rounded-pill px-3 fw-medium"
+                                                    onclick="return confirm('Verify {{ addslashes($hospital->hospital_name) }}?')">
+                                                    <i data-lucide="check" width="14" class="me-1"></i>Verify
+                                                </button>
+                                            </form>
+                                        @endif
                                         <form method="POST" action="{{ route('admin.hospitals.reject', $hospital->id) }}">
                                             @csrf
-                                            <button type="submit" class="btn btn-outline-secondary btn-sm rounded-pill px-3 fw-medium"
-                                                onclick="return confirm('Revoke verification for {{ addslashes($hospital->hospital_name) }}?')">
-                                                <i data-lucide="x" width="14" class="me-1"></i>Revoke
+                                            <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3 fw-medium"
+                                                onclick="return confirm('Delete and remove {{ addslashes($hospital->hospital_name) }}?')">
+                                                <i data-lucide="trash-2" width="14" class="me-1"></i>Delete
                                             </button>
                                         </form>
-                                    @else
-                                        <form method="POST" action="{{ route('admin.hospitals.verify', $hospital->id) }}">
-                                            @csrf
-                                            <button type="submit" class="btn btn-success btn-sm rounded-pill px-3 fw-medium"
-                                                onclick="return confirm('Verify {{ addslashes($hospital->hospital_name) }}?')">
-                                                <i data-lucide="check" width="14" class="me-1"></i>Verify
-                                            </button>
-                                        </form>
-                                    @endif
+                                    </div>
                                 </td>
                             </tr>
                             @endforeach
