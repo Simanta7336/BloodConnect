@@ -90,6 +90,19 @@
                 <h3 class="text-center fw-bold text-dark mb-4">BloodConnect</h3>
             </a>
 
+            @if (session('error'))
+                <div class="alert alert-warning alert-dismissible fade show text-sm mb-3" role="alert">
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+            @if (session('status'))
+                <div class="alert alert-success alert-dismissible fade show text-sm mb-3" role="alert">
+                    {{ session('status') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
             {{ $slot }}
         </div>
 
