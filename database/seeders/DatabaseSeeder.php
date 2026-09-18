@@ -21,14 +21,14 @@ class DatabaseSeeder extends Seeder
         $defaultPassword = Hash::make('password123');
 
         // ============================================================
-        // 1. ADMIN USER
+        // 1. ADMIN USER (Password: admin123)
         // ============================================================
         User::updateOrCreate(
             ['email' => 'admin@bloodconnect.com'],
             [
                 'name' => 'System Admin',
                 'email' => 'admin@bloodconnect.com',
-                'password' => $defaultPassword,
+                'password' => Hash::make('admin123'),
                 'role' => 'admin',
                 'email_verified_at' => now(),
             ]
